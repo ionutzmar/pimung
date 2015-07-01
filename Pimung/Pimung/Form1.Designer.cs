@@ -1,6 +1,6 @@
 ﻿namespace Pimung
 {
-    partial class Form1
+    partial class mainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,36 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.UpperMenu = new System.Windows.Forms.Splitter();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // UpperMenu
+            // panel1
             // 
-            this.UpperMenu.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.UpperMenu.Cursor = System.Windows.Forms.Cursors.SizeNS;
-            this.UpperMenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.UpperMenu.Location = new System.Drawing.Point(0, 0);
-            this.UpperMenu.Name = "UpperMenu";
-            this.UpperMenu.Size = new System.Drawing.Size(284, 67);
-            this.UpperMenu.TabIndex = 0;
-            this.UpperMenu.TabStop = false;
-            this.UpperMenu.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitter1_SplitterMoved);
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(300, 100);
+            this.panel1.TabIndex = 0;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
             // 
-            // Form1
+            // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.UpperMenu);
-            this.Name = "Form1";
+            this.ClientSize = new System.Drawing.Size(300, 300);
+            this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Name = "mainForm";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Splitter UpperMenu;
+        private System.Windows.Forms.Panel panel1;
+
+
 
 
     }
