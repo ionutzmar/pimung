@@ -40,7 +40,7 @@ namespace Pimung
 
         private void MouseEntered(object sender, EventArgs e)
         {
-            if (Cursor.Position.X > 30 && Cursor.Position.X < panel1.Width - 30 &)
+            if (Cursor.Position.X > 30 && Cursor.Position.X < panel1.Width - 30 &);
         }
     }
 }
