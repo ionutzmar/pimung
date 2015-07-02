@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FB60C1CA-DF88-4A96-BA40-022E7BFC606C}</ProjectGuid>
+    <ProjectGuid>{9F8B16E9-D990-4DDD-9224-7D82B0F1419F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pimung</RootNamespace>
