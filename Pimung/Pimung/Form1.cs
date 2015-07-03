@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace Pimung
 {
@@ -27,12 +28,27 @@ namespace Pimung
             panel2.Width = this.Width;
             panel2.Height = 10;
             panel2.Location = new Point(0 ,panel1.Height + panel1.Location.Y);
+
+            
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            LinearGradientBrush linGrBrush = new LinearGradientBrush(
+            new Point(0, 0),
+            new Point(0, this.Height),
+            Color.FromArgb(255, 218, 227, 124),
+            Color.FromArgb(255, 142, 247, 134));
+            Pen pen = new Pen(linGrBrush);
+            e.Graphics.FillRectangle(linGrBrush, 0, 0, this.Width, this.Height);
         }
 
         private void Form1_Resize(object sender, EventArgs e)
         {
             panel1.Width = this.Width;
             panel2.Width = this.Width;
+
+            this.Invalidate();
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)
@@ -73,6 +89,7 @@ namespace Pimung
         {
             startDragging = false;
         }
+
 
 
     }
