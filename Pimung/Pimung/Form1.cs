@@ -34,13 +34,7 @@ namespace Pimung
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            LinearGradientBrush linGrBrush = new LinearGradientBrush(
-            new Point(0, 0),
-            new Point(0, this.Height),
-            Color.FromArgb(255, 218, 227, 124),
-            Color.FromArgb(255, 142, 247, 134));
-            Pen pen = new Pen(linGrBrush);
-            e.Graphics.FillRectangle(linGrBrush, 0, 0, this.Width, this.Height);
+     
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -48,12 +42,12 @@ namespace Pimung
             panel1.Width = this.Width;
             panel2.Width = this.Width;
 
-            this.Invalidate();
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawLine(new Pen(Color.Purple, 1), 20, 5, panel2.Width - 35, 5);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 38, 126, 200), 1), 20, 5, panel2.Width - 35, 5);
+            e.Dispose();
         }
 
         private void panel2_Resize(object sender, EventArgs e)
