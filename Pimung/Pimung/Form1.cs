@@ -25,15 +25,10 @@ namespace Pimung
 
         private void Form1_Load(object sender, EventArgs e) //Set up a few components after the app has loaded
         {
-            panel1.Width = this.Width;
-            panel2.Width = this.Width;
             panel2.Height = 10;
-            panel2.Location = new Point(0 ,panel1.Height + panel1.Location.Y);
-            WhatDoToday.Location = new Point(this.Width / 2, 30);
-            PlayButton.Location = new Point(this.Width / 5 - PlayButton.Width / 2, 80 - PlayButton.Height / 2);
-            ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 50, 80 - ForwardButton.Height / 2);
-            BackWardButton.Location = new Point(PlayButton.Location.X - BackWardButton.Width - 50, 80 - BackWardButton.Height / 2);
-
+            panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
+            StrokeOval.Height = 10;
+            Form1_Resize(sender, e);
             
         }
 
@@ -42,10 +37,20 @@ namespace Pimung
         {
             panel1.Width = this.Width;
             panel2.Width = this.Width;
-            WhatDoToday.Location = new Point( this.Width / 2, 30);
-            PlayButton.Location = new Point(this.Width / 5 - PlayButton.Width / 2, 80 - PlayButton.Height / 2);
+
+            
+            WhatDoToday.Location = new Point( this.Width - WhatDoToday.Width - 30, 30);
+            StrokeOval.Location = new Point(this.Width / 2 - (WhatDoToday.Location.X - this.Width / 2), 80);
+            StrokeOval.Width = 2 * WhatDoToday.Location.X - this.Width - 30;
+            BackwardButton.Location = new Point(30, 80 - BackwardButton.Height / 2);
+            PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 50, 80 - PlayButton.Height / 2);
             ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 50, 80 - ForwardButton.Height / 2);
-            BackWardButton.Location = new Point(PlayButton.Location.X - BackWardButton.Width - 50, 80 - BackWardButton.Height / 2);
+            LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
+            LinesTable.Location = new Point(LeftMenu.Width, panel2.Location.Y);
+            LinesTable.Height = this.Height - panel1.Height;
+
+            ReplayButton.Location = new Point(StrokeOval.Location.X, StrokeOval.Location.Y + StrokeOval.Height + 20);
+            ShuffleButton.Location = new Point(StrokeOval.Location.X + StrokeOval.Width - ShuffleButton.Width, StrokeOval.Location.Y + StrokeOval.Height + 20);
 
         }
 
@@ -81,17 +86,14 @@ namespace Pimung
             {
                 panel1.Height = MousePosition.Y - this.Top - 35;
                 panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
+                LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
+                LinesTable.Location = new Point(LeftMenu.Width, panel2.Location.Y);
             }
         }
 
         private void panel2_MouseUp(object sender, MouseEventArgs e)
         {
             startDragging = false;
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
 

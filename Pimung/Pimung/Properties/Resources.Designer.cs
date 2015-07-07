@@ -63,29 +63,9 @@ namespace Pimung.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BackwardButton {
-            get {
-                object obj = ResourceManager.GetObject("BackwardButton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap BackwardButton1 {
             get {
                 object obj = ResourceManager.GetObject("BackwardButton1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap ForwardButton {
-            get {
-                object obj = ResourceManager.GetObject("ForwardButton", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +83,9 @@ namespace Pimung.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap playButton {
+        internal static System.Drawing.Bitmap playButton2 {
             get {
-                object obj = ResourceManager.GetObject("playButton", resourceCulture);
+                object obj = ResourceManager.GetObject("playButton2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +93,29 @@ namespace Pimung.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap playButton1 {
+        internal static System.Drawing.Bitmap Replay {
             get {
-                object obj = ResourceManager.GetObject("playButton1", resourceCulture);
+                object obj = ResourceManager.GetObject("Replay", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Shuffle {
+            get {
+                object obj = ResourceManager.GetObject("Shuffle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap StrokeOval {
+            get {
+                object obj = ResourceManager.GetObject("StrokeOval", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
