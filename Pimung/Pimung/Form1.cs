@@ -15,6 +15,7 @@ namespace Pimung
     {
 
         Boolean startDragging;
+        int panel1OriginalHeight;
 
 
         public Form1()
@@ -27,6 +28,7 @@ namespace Pimung
         {
             panel2.Height = 10;
             panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
+            panel1OriginalHeight = panel1.Height;
             StrokeOval.Height = 10;
             Form1_Resize(sender, e);
             
@@ -82,7 +84,7 @@ namespace Pimung
 
         private void panel2_MouseMove(object sender, MouseEventArgs e)
         {
-            if (startDragging)
+            if (startDragging && (MousePosition.Y - this.Top > panel1OriginalHeight + 35))
             {
                 panel1.Height = MousePosition.Y - this.Top - 35;
                 panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
