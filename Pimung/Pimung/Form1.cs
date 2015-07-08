@@ -8,17 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using Microsoft.Xna.Framework.Audio;
+
 
 namespace Pimung
 {
-    public partial class Form1 : Form
+    public partial class ChooseMusic : Form
     {
 
         Boolean startDragging;
         int panel1OriginalHeight;
 
 
-        public Form1()
+        public ChooseMusic()
         {
             InitializeComponent();
         }
@@ -40,13 +42,13 @@ namespace Pimung
             panel1.Width = this.Width;
             panel2.Width = this.Width;
 
-            
+            AddMusicBotton.Location = new Point(50, panel1OriginalHeight + 50);
             WhatDoToday.Location = new Point( this.Width - WhatDoToday.Width - 30, 30);
             StrokeOval.Location = new Point(this.Width / 2 - (WhatDoToday.Location.X - this.Width / 2), 80);
             StrokeOval.Width = 2 * WhatDoToday.Location.X - this.Width - 30;
-            BackwardButton.Location = new Point(30, 80 - BackwardButton.Height / 2);
-            PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 50, 80 - PlayButton.Height / 2);
-            ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 50, 80 - ForwardButton.Height / 2);
+            BackwardButton.Location = new Point(40, 70 - BackwardButton.Height / 2);
+            PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 30, 70 - PlayButton.Height / 2);
+            ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 30, 70 - ForwardButton.Height / 2);
             LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
             LinesTable.Location = new Point(LeftMenu.Width, panel2.Location.Y);
             LinesTable.Height = this.Height - panel1.Height;
@@ -97,6 +99,26 @@ namespace Pimung
         {
             startDragging = false;
         }
+
+        private void AddMusicBotton_Click(object sender, EventArgs e)
+        {
+            if (BrowseMusic.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                 foreach (String file in BrowseMusic.FileNames)
+                 {
+                     Console.WriteLine(file);
+                     System.IO.FileStream fs = new System.IO.FileStream(@"C:\Myfile.wav", System.IO.FileMode.Open);
+                     SoundEffect mysound = SoundEffect.FromStream(fs);
+                     fs.Dispose();
+                     break;
+                 }
+
+            }
+               
+        }
+
+
+
 
 
     }

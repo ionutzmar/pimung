@@ -1,6 +1,6 @@
 ﻿namespace Pimung
 {
-    partial class Form1
+    partial class ChooseMusic
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.AddMusicBotton = new System.Windows.Forms.Label();
             this.StrokeOval = new System.Windows.Forms.PictureBox();
             this.ReplayButton = new System.Windows.Forms.PictureBox();
             this.ShuffleButton = new System.Windows.Forms.PictureBox();
@@ -43,6 +44,7 @@
             this.plannerButton = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.PlaylistsText = new System.Windows.Forms.Button();
+            this.BrowseMusic = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReplayButton)).BeginInit();
@@ -58,6 +60,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.AddMusicBotton);
             this.panel1.Controls.Add(this.StrokeOval);
             this.panel1.Controls.Add(this.ReplayButton);
             this.panel1.Controls.Add(this.ShuffleButton);
@@ -69,6 +72,19 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(980, 145);
             this.panel1.TabIndex = 0;
+            // 
+            // AddMusicBotton
+            // 
+            this.AddMusicBotton.AutoSize = true;
+            this.AddMusicBotton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AddMusicBotton.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.AddMusicBotton.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.AddMusicBotton.Location = new System.Drawing.Point(39, 112);
+            this.AddMusicBotton.Name = "AddMusicBotton";
+            this.AddMusicBotton.Size = new System.Drawing.Size(256, 29);
+            this.AddMusicBotton.TabIndex = 6;
+            this.AddMusicBotton.Text = "Add music in your player";
+            this.AddMusicBotton.Click += new System.EventHandler(this.AddMusicBotton_Click);
             // 
             // StrokeOval
             // 
@@ -117,7 +133,7 @@
             this.BackwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.BackwardButton.Location = new System.Drawing.Point(96, 56);
             this.BackwardButton.Name = "BackwardButton";
-            this.BackwardButton.Size = new System.Drawing.Size(64, 40);
+            this.BackwardButton.Size = new System.Drawing.Size(48, 30);
             this.BackwardButton.TabIndex = 2;
             this.BackwardButton.TabStop = false;
             // 
@@ -127,7 +143,7 @@
             this.ForwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ForwardButton.Location = new System.Drawing.Point(288, 56);
             this.ForwardButton.Name = "ForwardButton";
-            this.ForwardButton.Size = new System.Drawing.Size(64, 40);
+            this.ForwardButton.Size = new System.Drawing.Size(48, 30);
             this.ForwardButton.TabIndex = 1;
             this.ForwardButton.TabStop = false;
             // 
@@ -135,9 +151,9 @@
             // 
             this.PlayButton.BackgroundImage = global::Pimung.Properties.Resources.playButton2;
             this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PlayButton.Location = new System.Drawing.Point(205, 50);
+            this.PlayButton.Location = new System.Drawing.Point(195, 43);
             this.PlayButton.Name = "PlayButton";
-            this.PlayButton.Size = new System.Drawing.Size(48, 60);
+            this.PlayButton.Size = new System.Drawing.Size(40, 50);
             this.PlayButton.TabIndex = 0;
             this.PlayButton.TabStop = false;
             // 
@@ -166,7 +182,7 @@
             this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 125F));
             this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102F));
             this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 103F));
-            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 264F));
+            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 268F));
             this.LinesTable.Location = new System.Drawing.Point(366, 181);
             this.LinesTable.Name = "LinesTable";
             this.LinesTable.RowCount = 2;
@@ -243,7 +259,12 @@
             this.PlaylistsText.UseMnemonic = false;
             this.PlaylistsText.UseVisualStyleBackColor = false;
             // 
-            // Form1
+            // BrowseMusic
+            // 
+            this.BrowseMusic.Multiselect = true;
+            this.BrowseMusic.Title = "Choose Music";
+            // 
+            // ChooseMusic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -254,7 +275,7 @@
             this.Controls.Add(this.LeftMenu);
             this.Controls.Add(this.panel1);
             this.MinimumSize = new System.Drawing.Size(950, 500);
-            this.Name = "Form1";
+            this.Name = "ChooseMusic";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
@@ -288,6 +309,8 @@
         private System.Windows.Forms.PictureBox ShuffleButton;
         private System.Windows.Forms.PictureBox ReplayButton;
         private System.Windows.Forms.PictureBox StrokeOval;
+        private System.Windows.Forms.Label AddMusicBotton;
+        private System.Windows.Forms.OpenFileDialog BrowseMusic;
     }
 }
 
