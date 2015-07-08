@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
-using Microsoft.Xna.Framework.Audio;
+using WMPLib;
 
 
 namespace Pimung
@@ -18,6 +18,7 @@ namespace Pimung
 
         Boolean startDragging;
         int panel1OriginalHeight;
+        List<string> SongsPaths = new List<string>();
 
 
         public ChooseMusic()
@@ -104,20 +105,21 @@ namespace Pimung
         {
             if (BrowseMusic.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                 foreach (String file in BrowseMusic.FileNames)
+                 foreach (string file in BrowseMusic.FileNames)
                  {
-                     Console.WriteLine(file);
-                     System.IO.FileStream fs = new System.IO.FileStream(@"C:\Myfile.wav", System.IO.FileMode.Open);
-                     SoundEffect mysound = SoundEffect.FromStream(fs);
-                     fs.Dispose();
-                     break;
+                     SongsPaths.Add(file);
+                     
                  }
-
+                 foreach (string file in SongsPaths)
+                     Console.WriteLine(file);
             }
                
         }
 
 
+     //   WMPLib.WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
+     //                a.URL = file;
+      //               a.controls.play();
 
 
 

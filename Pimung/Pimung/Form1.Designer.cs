@@ -182,7 +182,7 @@
             this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 125F));
             this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102F));
             this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 103F));
-            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 268F));
+            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 270F));
             this.LinesTable.Location = new System.Drawing.Point(366, 181);
             this.LinesTable.Name = "LinesTable";
             this.LinesTable.RowCount = 2;
@@ -261,6 +261,7 @@
             // 
             // BrowseMusic
             // 
+            this.BrowseMusic.Filter = "Music |*.mp3; *.wav|All files|*.*";
             this.BrowseMusic.Multiselect = true;
             this.BrowseMusic.Title = "Choose Music";
             // 
