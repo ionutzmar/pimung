@@ -34,7 +34,18 @@ namespace Pimung
             panel1OriginalHeight = panel1.Height;
             StrokeOval.Height = 10;
             Form1_Resize(sender, e);
-            
+            for (int rowNum = 2; rowNum < 10; rowNum++)
+            {
+                TableRow tempRow = new TableRow();
+                for (int cellNum = 0; cellNum < 3; cellNum++)
+                {
+                    TableCell tempCell = new TableCell();
+                    tempCell.Text =
+                        String.Format("({0},{1})", rowNum, cellNum);
+                    tempRow.Cells.Add(tempCell);
+                }
+                Table1.Rows.Add(tempRow);
+            }
         }
 
 
@@ -111,9 +122,9 @@ namespace Pimung
                      
                  }
                  foreach (string file in SongsPaths)
-                     Console.WriteLine(file);
+                 Console.WriteLine(file);
             }
-               
+
         }
 
 
