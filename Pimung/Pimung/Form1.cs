@@ -20,6 +20,7 @@ namespace Pimung
         int panel1OriginalHeight;
         List<string> SongsPaths = new List<string>();
 
+        
 
         public ChooseMusic()
         {
@@ -34,18 +35,7 @@ namespace Pimung
             panel1OriginalHeight = panel1.Height;
             StrokeOval.Height = 10;
             Form1_Resize(sender, e);
-            for (int rowNum = 2; rowNum < 10; rowNum++)
-            {
-                TableRow tempRow = new TableRow();
-                for (int cellNum = 0; cellNum < 3; cellNum++)
-                {
-                    TableCell tempCell = new TableCell();
-                    tempCell.Text =
-                        String.Format("({0},{1})", rowNum, cellNum);
-                    tempRow.Cells.Add(tempCell);
-                }
-                Table1.Rows.Add(tempRow);
-            }
+            
         }
 
 
@@ -118,20 +108,36 @@ namespace Pimung
             {
                  foreach (string file in BrowseMusic.FileNames)
                  {
-                     SongsPaths.Add(file);
+                     if(SongsPaths.IndexOf(file) == -1)
+                        SongsPaths.Add(file);
                      
                  }
-                 foreach (string file in SongsPaths)
-                 Console.WriteLine(file);
+                 LoadingMusicInTable = true;
+                AddMusicInTable(SongsPaths);
             }
 
         }
+
+        private void AddMusicInTable(List<string> songs)
+        {
+         
+            foreach(string file in songs)
+            {       
+                song.URL = file;
+                song.controls.play();
+                //song.settings.mute = true;
+
+            }
+        }
+
 
 
      //   WMPLib.WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
      //                a.URL = file;
       //               a.controls.play();
-
+        //Label l = new Label();
+        // l.Text = "asdf";
+        //LinesTable.Controls.Add(l, 1, 0);
 
 
     }
