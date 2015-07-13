@@ -39,12 +39,18 @@
             this.PlayButton = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.LinesTable = new System.Windows.Forms.TableLayoutPanel();
+            this.SongLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.LeftMenu = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.plannerButton = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.PlaylistsText = new System.Windows.Forms.Button();
             this.BrowseMusic = new System.Windows.Forms.OpenFileDialog();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReplayButton)).BeginInit();
@@ -52,6 +58,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.BackwardButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ForwardButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).BeginInit();
+            this.LinesTable.SuspendLayout();
             this.LeftMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -173,19 +180,97 @@
             // 
             // LinesTable
             // 
-            this.LinesTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LinesTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LinesTable.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.LinesTable.ColumnCount = 2;
+            this.LinesTable.ColumnCount = 6;
             this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 67.48166F));
-            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 274F));
-            this.LinesTable.Location = new System.Drawing.Point(366, 181);
+            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 115F));
+            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 125F));
+            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102F));
+            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 97F));
+            this.LinesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 226F));
+            this.LinesTable.Controls.Add(this.SongLabel, 0, 0);
+            this.LinesTable.Controls.Add(this.label1, 1, 0);
+            this.LinesTable.Controls.Add(this.label2, 2, 0);
+            this.LinesTable.Controls.Add(this.label3, 3, 0);
+            this.LinesTable.Controls.Add(this.label4, 4, 0);
+            this.LinesTable.Controls.Add(this.label5, 5, 0);
+            this.LinesTable.Location = new System.Drawing.Point(195, 183);
             this.LinesTable.Name = "LinesTable";
-            this.LinesTable.RowCount = 2;
+            this.LinesTable.RowCount = 6;
             this.LinesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.661836F));
             this.LinesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.33817F));
-            this.LinesTable.Size = new System.Drawing.Size(714, 359);
+            this.LinesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.LinesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.LinesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.LinesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.LinesTable.Size = new System.Drawing.Size(777, 359);
             this.LinesTable.TabIndex = 2;
+            // 
+            // SongLabel
+            // 
+            this.SongLabel.AutoSize = true;
+            this.SongLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SongLabel.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.SongLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.SongLabel.Location = new System.Drawing.Point(4, 1);
+            this.SongLabel.Name = "SongLabel";
+            this.SongLabel.Size = new System.Drawing.Size(99, 26);
+            this.SongLabel.TabIndex = 0;
+            this.SongLabel.Text = "Song";
+            this.SongLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label1.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label1.Location = new System.Drawing.Point(110, 1);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(109, 26);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Duration";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label2.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label2.Location = new System.Drawing.Point(226, 1);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(119, 26);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Artist";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label3.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label3.Location = new System.Drawing.Point(352, 1);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(96, 26);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Album";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label4.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label4.Location = new System.Drawing.Point(455, 1);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(91, 26);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Genre";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LeftMenu
             // 
@@ -261,6 +346,19 @@
             this.BrowseMusic.Multiselect = true;
             this.BrowseMusic.Title = "Choose Music";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label5.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label5.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label5.Location = new System.Drawing.Point(553, 1);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(220, 26);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Send via WiFi";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // ChooseMusic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -284,6 +382,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.BackwardButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ForwardButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).EndInit();
+            this.LinesTable.ResumeLayout(false);
+            this.LinesTable.PerformLayout();
             this.LeftMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -308,6 +408,12 @@
         private System.Windows.Forms.PictureBox StrokeOval;
         private System.Windows.Forms.Label AddMusicBotton;
         private System.Windows.Forms.OpenFileDialog BrowseMusic;
+        private System.Windows.Forms.Label SongLabel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
 
