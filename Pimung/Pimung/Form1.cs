@@ -54,9 +54,10 @@ namespace Pimung
             PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 30, 70 - PlayButton.Height / 2);
             ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 30, 70 - ForwardButton.Height / 2);
             LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
-            LinesTable.Location = new Point(LeftMenu.Width, panel2.Location.Y);
-            LinesTable.Height = this.Height - panel1.Height;
-            LinesTable.Width = this.Width - LeftMenu.Width;
+            songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
+            songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 40;
+            songGrid.Width = this.Width - LeftMenu.Width - 20;
+            
 
             ReplayButton.Location = new Point(StrokeOval.Location.X, StrokeOval.Location.Y + StrokeOval.Height + 20);
             ShuffleButton.Location = new Point(StrokeOval.Location.X + StrokeOval.Width - ShuffleButton.Width, StrokeOval.Location.Y + StrokeOval.Height + 20);
@@ -96,7 +97,7 @@ namespace Pimung
                 panel1.Height = MousePosition.Y - this.Top - 35;
                 panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
                 LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
-                LinesTable.Location = new Point(LeftMenu.Width, panel2.Location.Y);
+                songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
             }
         }
 
@@ -124,6 +125,15 @@ namespace Pimung
         {
             MusicToTable.Clear();
             amount = songs.Count;
+
+            //if (songGrid.Rows.Count > 0)
+           // {
+                for (int j = 0; j < songGrid.Rows.Count; j++)
+                {
+                    songGrid.Rows.Remove(songGrid.Rows[j]);
+                }
+           // }
+
             for (int i = 0; i < songs.Count; i++)
             {
                 WMPLib.WindowsMediaPlayer song = new WMPLib.WindowsMediaPlayer();
@@ -137,43 +147,54 @@ namespace Pimung
         }
 
          private void AddMusicInTable(int NewState)
-        {
-            counter++;
+         {
+             counter++;
 
-                if (counter == amount)
-                {
-                    for (int i = 0; i < MusicToTable.Count; i++)
-                    {
-                        MusicToTable[i].controls.stop();
-                        Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Artist"));
-                        //Console.WriteLine();
+             if (counter == amount)
+             {
+                 for (int i = 0; i < MusicToTable.Count; i++)
+                 {
+                     MusicToTable[i].controls.stop();
+                     MusicToTable[i].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(AddMusicInTable);
+                     //Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Artist"));
+                     //Console.WriteLine();
 
-                        Label songTitle = new Label();
-                        songTitle.Text = MusicToTable[i].currentMedia.getItemInfo("Title");
-                        LinesTable.Controls.Add(songTitle, 0, i + 1);
+                     //DataGridViewRow row = (DataGridViewRow)songGrid.Rows[0].Clone();
+                     //row.Cells[0].Value = MusicToTable[i].currentMedia.getItemInfo("Title");
+                     //row.Cells[1].Value = MusicToTable[i].currentMedia.durationString;
+                     //row.Cells[2].Value = MusicToTable[i].currentMedia.getItemInfo("Artist");
+                     //row.Cells[3].Value = MusicToTable[i].currentMedia.getItemInfo("Album");
+                     //row.Cells[4].Value = MusicToTable[i].currentMedia.getItemInfo("Genre");
+                     //songGrid.Rows.Add(row);
 
-                        Label songDuration = new Label();
-                        songDuration.Text = MusicToTable[i].currentMedia.getItemInfo("Title");
-                        LinesTable.Controls.Add(songDuration, 1, i + 1);
+                     //string[] rowDG = new string[] { MusicToTable[i].currentMedia.getItemInfo("Title"), MusicToTable[i].currentMedia.durationString, MusicToTable[i].currentMedia.getItemInfo("Artist"), MusicToTable[i].currentMedia.getItemInfo("Album"), MusicToTable[i].currentMedia.getItemInfo("Genre") };
+                     //songGrid.Rows.Add(rowDG);
 
-                        Label songArtist = new Label();
-                        songArtist.Text = MusicToTable[i].currentMedia.getItemInfo("Title");
-                        LinesTable.Controls.Add(songArtist, 2, i + 1);
+                     Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Title"));
+                     //Console.WriteLine(MusicToTable[i].currentMedia.durationString);
+                     //Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Artist"));
+                     //Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Album"));
+                     //Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Genre"));
 
-                        Label songAlbum = new Label();
-                        songAlbum.Text = MusicToTable[i].currentMedia.getItemInfo("Title");
-                        LinesTable.Controls.Add(songAlbum, 3, i + 1);
 
-                        Label songGenre = new Label();
-                        songGenre.Text = MusicToTable[i].currentMedia.getItemInfo("Title");
-                        LinesTable.Controls.Add(songGenre, 4, i + 1);
-                        
-                        
-                    }
-                    counter = 0;
-                }
+                   
 
-        }
+                 }
+                 counter = 0;
+                 Console.WriteLine();
+             }
+
+         }
+
+         protected override CreateParams CreateParams //remove flickering
+         {
+             get
+             {
+                 CreateParams cp = base.CreateParams;
+                 cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                 return cp;
+             }
+         }
        //private void player_PlayStateChange(int NewState)
        //{
        //    for (int i = 0; i < song.Count; i++)
