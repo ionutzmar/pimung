@@ -21,7 +21,10 @@ namespace Pimung
         List<string> SongsPaths = new List<string>();
         List<WMPLib.WindowsMediaPlayer> MusicToTable = new List<WMPLib.WindowsMediaPlayer>();
         int amount, counter = 0; // counts the number of times 'AddMusicInTable' was called. Useful for adding music to table.
-
+        int songPlayed = -1; //index of the last song palyed
+        Boolean isPlaying = false;
+        Boolean viaWifi = false;
+        Boolean loopMusic = false;
         public ChooseMusic()
         {
             InitializeComponent();
@@ -34,6 +37,11 @@ namespace Pimung
             panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
             panel1OriginalHeight = panel1.Height;
             StrokeOval.Height = 10;
+            AddMusicBotton.Location = new Point(50, panel1OriginalHeight + 50);
+            checkWifi.Location = new Point(50, AddMusicBotton.Location.Y + AddMusicBotton.Height + 10);
+            BackwardButton.Location = new Point(40, 70 - BackwardButton.Height / 2);
+            PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 40, 70 - PlayButton.Height / 2);
+            ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 40, 70 - ForwardButton.Height / 2);
             Form1_Resize(sender, e);
 
             Console.WriteLine("Form1 loaded");
@@ -46,16 +54,13 @@ namespace Pimung
             panel1.Width = this.Width;
             panel2.Width = this.Width;
 
-            AddMusicBotton.Location = new Point(50, panel1OriginalHeight + 50);
+            
             WhatDoToday.Location = new Point( this.Width - WhatDoToday.Width - 30, 30);
             StrokeOval.Location = new Point(this.Width / 2 - (WhatDoToday.Location.X - this.Width / 2), 80);
             StrokeOval.Width = 2 * WhatDoToday.Location.X - this.Width - 30;
-            BackwardButton.Location = new Point(40, 70 - BackwardButton.Height / 2);
-            PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 30, 70 - PlayButton.Height / 2);
-            ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 30, 70 - ForwardButton.Height / 2);
             LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
             songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
-            songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 40;
+            songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
             songGrid.Width = this.Width - LeftMenu.Width - 20;
             
 
@@ -98,6 +103,7 @@ namespace Pimung
                 panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
                 LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
                 songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
+                songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
             }
         }
 
@@ -118,21 +124,23 @@ namespace Pimung
                  }
                 
                 LoadMusicInTable(SongsPaths);
+
             }
 
         }
+
          private void LoadMusicInTable(List<string> songs)
         {
+            if (songPlayed != -1)
+                MusicToTable[songPlayed].controls.stop();
             MusicToTable.Clear();
             amount = songs.Count;
 
-            //if (songGrid.Rows.Count > 0)
-           // {
-                for (int j = 0; j < songGrid.Rows.Count; j++)
-                {
-                    songGrid.Rows.Remove(songGrid.Rows[j]);
-                }
-           // }
+            int numberOfRows = songGrid.Rows.Count;
+            for (int j = 0; j < numberOfRows; j++)
+            {
+                songGrid.Rows.Remove(songGrid.Rows[0]);
+            }
 
             for (int i = 0; i < songs.Count; i++)
             {
@@ -154,36 +162,15 @@ namespace Pimung
              {
                  for (int i = 0; i < MusicToTable.Count; i++)
                  {
-                     MusicToTable[i].controls.stop();
                      MusicToTable[i].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(AddMusicInTable);
-                     //Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Artist"));
-                     //Console.WriteLine();
-
-                     //DataGridViewRow row = (DataGridViewRow)songGrid.Rows[0].Clone();
-                     //row.Cells[0].Value = MusicToTable[i].currentMedia.getItemInfo("Title");
-                     //row.Cells[1].Value = MusicToTable[i].currentMedia.durationString;
-                     //row.Cells[2].Value = MusicToTable[i].currentMedia.getItemInfo("Artist");
-                     //row.Cells[3].Value = MusicToTable[i].currentMedia.getItemInfo("Album");
-                     //row.Cells[4].Value = MusicToTable[i].currentMedia.getItemInfo("Genre");
-                     //songGrid.Rows.Add(row);
-
-                     //string[] rowDG = new string[] { MusicToTable[i].currentMedia.getItemInfo("Title"), MusicToTable[i].currentMedia.durationString, MusicToTable[i].currentMedia.getItemInfo("Artist"), MusicToTable[i].currentMedia.getItemInfo("Album"), MusicToTable[i].currentMedia.getItemInfo("Genre") };
-                     //songGrid.Rows.Add(rowDG);
-
-                     Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Title"));
-                     //Console.WriteLine(MusicToTable[i].currentMedia.durationString);
-                     //Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Artist"));
-                     //Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Album"));
-                     //Console.WriteLine(MusicToTable[i].currentMedia.getItemInfo("Genre"));
-
-
-                   
+                     MusicToTable[i].settings.mute = false;
+                     MusicToTable[i].controls.stop();
+                     string[] rowDG = new string[] { MusicToTable[i].currentMedia.getItemInfo("Title"), MusicToTable[i].currentMedia.durationString, MusicToTable[i].currentMedia.getItemInfo("Artist"), MusicToTable[i].currentMedia.getItemInfo("Album"), MusicToTable[i].currentMedia.getItemInfo("Genre") };
+                     songGrid.Rows.Add(rowDG);
 
                  }
                  counter = 0;
-                 Console.WriteLine();
              }
-
          }
 
          protected override CreateParams CreateParams //remove flickering
@@ -195,6 +182,80 @@ namespace Pimung
                  return cp;
              }
          }
+         
+         private void playStopMusic(object sender, EventArgs e)
+         {
+             if (songGrid.Rows.Count > 0)
+             {
+                 if (sender.ToString() == "System.Windows.Forms.DataGridView" && !viaWifi)
+                 {
+                     if (songPlayed != -1)
+                     {
+                         MusicToTable[songPlayed].settings.setMode("loop", false);
+                         MusicToTable[songPlayed].controls.stop();
+                     }
+
+                     for (int i = 0; i < MusicToTable.Count; i++)
+                     {
+                         if (songGrid.Rows[songGrid.CurrentCell.RowIndex].Cells[0].FormattedValue.ToString() == MusicToTable[i].currentMedia.getItemInfo("Title"))
+                         {
+                             Console.WriteLine("Se potrivesc");
+                             songPlayed = i;
+                             MusicToTable[songPlayed].controls.play();
+                             MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                             break;
+                         }
+                     }
+                     isPlaying = true;
+                 }
+                 else if (!viaWifi)
+                 {
+                     if (isPlaying)
+                     {
+                         MusicToTable[songPlayed].controls.pause();
+                         isPlaying = false;
+                     }
+                     else if (songPlayed == -1)
+                     {
+                         MusicToTable[0].controls.play();
+                         MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                         songPlayed = 0;
+                         isPlaying = true;
+                     }
+                     else
+                     {
+                         MusicToTable[songPlayed].controls.play();
+                         MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                         isPlaying = true;
+                     }
+                 }
+                 if(isPlaying)
+                     PlayButton.BackgroundImage = Pimung.Properties.Resources.PauseBotton;
+                 else
+                     PlayButton.BackgroundImage = Pimung.Properties.Resources.playButton2;
+             }
+             
+             
+
+         }
+
+         private void checkWifi_CheckStateChanged(object sender, EventArgs e)
+         {
+             viaWifi = !viaWifi;
+         }
+
+         
+         private void ReplayButton_Click(object sender, EventArgs e)
+         {
+             loopMusic = !loopMusic;
+             if (loopMusic)
+                 ReplayButton.BackColor = System.Drawing.Color.Gainsboro;
+             else
+                 ReplayButton.BackColor = System.Drawing.Color.WhiteSmoke;
+             if (songPlayed != -1)
+                MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+         }
+
        //private void player_PlayStateChange(int NewState)
        //{
        //    for (int i = 0; i < song.Count; i++)

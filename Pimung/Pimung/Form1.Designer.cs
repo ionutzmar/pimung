@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.AddMusicBotton = new System.Windows.Forms.Label();
             this.StrokeOval = new System.Windows.Forms.PictureBox();
@@ -53,7 +53,7 @@
             this.songArtist = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songGenre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.songWifi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.checkWifi = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReplayButton)).BeginInit();
@@ -70,6 +70,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.checkWifi);
             this.panel1.Controls.Add(this.AddMusicBotton);
             this.panel1.Controls.Add(this.StrokeOval);
             this.panel1.Controls.Add(this.ReplayButton);
@@ -87,11 +88,11 @@
             // 
             this.AddMusicBotton.AutoSize = true;
             this.AddMusicBotton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AddMusicBotton.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.AddMusicBotton.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.AddMusicBotton.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.AddMusicBotton.Location = new System.Drawing.Point(39, 112);
+            this.AddMusicBotton.Location = new System.Drawing.Point(91, 112);
             this.AddMusicBotton.Name = "AddMusicBotton";
-            this.AddMusicBotton.Size = new System.Drawing.Size(256, 29);
+            this.AddMusicBotton.Size = new System.Drawing.Size(224, 26);
             this.AddMusicBotton.TabIndex = 6;
             this.AddMusicBotton.Text = "Add music in your player";
             this.AddMusicBotton.Click += new System.EventHandler(this.AddMusicBotton_Click);
@@ -100,7 +101,7 @@
             // 
             this.StrokeOval.BackgroundImage = global::Pimung.Properties.Resources.StrokeOval;
             this.StrokeOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.StrokeOval.Location = new System.Drawing.Point(440, 112);
+            this.StrokeOval.Location = new System.Drawing.Point(423, 119);
             this.StrokeOval.Name = "StrokeOval";
             this.StrokeOval.Size = new System.Drawing.Size(371, 19);
             this.StrokeOval.TabIndex = 5;
@@ -110,17 +111,18 @@
             // 
             this.ReplayButton.BackgroundImage = global::Pimung.Properties.Resources.Replay;
             this.ReplayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ReplayButton.Location = new System.Drawing.Point(96, 112);
+            this.ReplayButton.Location = new System.Drawing.Point(720, 73);
             this.ReplayButton.Name = "ReplayButton";
             this.ReplayButton.Size = new System.Drawing.Size(32, 20);
             this.ReplayButton.TabIndex = 4;
             this.ReplayButton.TabStop = false;
+            this.ReplayButton.Click += new System.EventHandler(this.ReplayButton_Click);
             // 
             // ShuffleButton
             // 
             this.ShuffleButton.BackgroundImage = global::Pimung.Properties.Resources.Shuffle;
             this.ShuffleButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ShuffleButton.Location = new System.Drawing.Point(304, 112);
+            this.ShuffleButton.Location = new System.Drawing.Point(385, 56);
             this.ShuffleButton.Name = "ShuffleButton";
             this.ShuffleButton.Size = new System.Drawing.Size(32, 20);
             this.ShuffleButton.TabIndex = 4;
@@ -166,6 +168,7 @@
             this.PlayButton.Size = new System.Drawing.Size(40, 50);
             this.PlayButton.TabIndex = 0;
             this.PlayButton.TabStop = false;
+            this.PlayButton.Click += new System.EventHandler(this.playStopMusic);
             // 
             // panel2
             // 
@@ -261,81 +264,95 @@
             this.songGrid.AllowUserToDeleteRows = false;
             this.songGrid.AllowUserToOrderColumns = true;
             this.songGrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.songGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.songGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
             this.songGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.songGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             this.songGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.songGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleVertical;
             this.songGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.songGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.songGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
             this.songGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.songGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.songName,
             this.songDuration,
             this.songArtist,
             this.songAlbum,
-            this.songGenre,
-            this.songWifi});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.songGrid.DefaultCellStyle = dataGridViewCellStyle3;
+            this.songGenre});
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.songGrid.DefaultCellStyle = dataGridViewCellStyle15;
             this.songGrid.EnableHeadersVisualStyles = false;
             this.songGrid.GridColor = System.Drawing.Color.Gainsboro;
             this.songGrid.Location = new System.Drawing.Point(166, 186);
             this.songGrid.Name = "songGrid";
+            this.songGrid.ReadOnly = true;
             this.songGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.songGrid.RowHeadersVisible = false;
             this.songGrid.Size = new System.Drawing.Size(652, 251);
             this.songGrid.TabIndex = 4;
+            this.songGrid.DoubleClick += new System.EventHandler(this.playStopMusic);
             // 
             // songName
             // 
             this.songName.HeaderText = "Song";
             this.songName.Name = "songName";
+            this.songName.ReadOnly = true;
             // 
             // songDuration
             // 
             this.songDuration.HeaderText = "Duration";
             this.songDuration.Name = "songDuration";
+            this.songDuration.ReadOnly = true;
             // 
             // songArtist
             // 
             this.songArtist.HeaderText = "Artist";
             this.songArtist.Name = "songArtist";
+            this.songArtist.ReadOnly = true;
             // 
             // songAlbum
             // 
             this.songAlbum.HeaderText = "Album";
             this.songAlbum.Name = "songAlbum";
+            this.songAlbum.ReadOnly = true;
             // 
             // songGenre
             // 
             this.songGenre.HeaderText = "Genre";
             this.songGenre.Name = "songGenre";
+            this.songGenre.ReadOnly = true;
             // 
-            // songWifi
+            // checkWifi
             // 
-            this.songWifi.HeaderText = "Send via WiFi";
-            this.songWifi.Name = "songWifi";
+            this.checkWifi.AutoSize = true;
+            this.checkWifi.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.checkWifi.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.checkWifi.Location = new System.Drawing.Point(423, 63);
+            this.checkWifi.Name = "checkWifi";
+            this.checkWifi.Size = new System.Drawing.Size(201, 30);
+            this.checkWifi.TabIndex = 7;
+            this.checkWifi.Text = "Send music via WiFi";
+            this.checkWifi.UseVisualStyleBackColor = true;
+            this.checkWifi.CheckStateChanged += new System.EventHandler(this.checkWifi_CheckStateChanged);
             // 
             // ChooseMusic
             // 
@@ -390,7 +407,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn songArtist;
         private System.Windows.Forms.DataGridViewTextBoxColumn songAlbum;
         private System.Windows.Forms.DataGridViewTextBoxColumn songGenre;
-        private System.Windows.Forms.DataGridViewTextBoxColumn songWifi;
+        private System.Windows.Forms.CheckBox checkWifi;
     }
 }
 
