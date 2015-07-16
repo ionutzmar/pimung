@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using WMPLib;
+using System.Timers;
 
 
 namespace Pimung
@@ -25,6 +26,10 @@ namespace Pimung
         Boolean isPlaying = false;
         Boolean viaWifi = false;
         Boolean loopMusic = false;
+        Boolean isTiming = false;
+        System.Timers.Timer aTimer = new System.Timers.Timer();
+
+
         public ChooseMusic()
         {
             InitializeComponent();
@@ -37,12 +42,19 @@ namespace Pimung
             panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
             panel1OriginalHeight = panel1.Height;
             StrokeOval.Height = 10;
+            fullOval.Height = 10;
             AddMusicBotton.Location = new Point(50, panel1OriginalHeight + 50);
             checkWifi.Location = new Point(50, AddMusicBotton.Location.Y + AddMusicBotton.Height + 10);
             BackwardButton.Location = new Point(40, 70 - BackwardButton.Height / 2);
             PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 40, 70 - PlayButton.Height / 2);
             ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 40, 70 - ForwardButton.Height / 2);
             Form1_Resize(sender, e);
+
+            System.Timers.Timer aTimer = new System.Timers.Timer();
+            aTimer.Enabled = true;
+            aTimer.Interval = 200;
+            //aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            aTimer.Start(); 
 
             Console.WriteLine("Form1 loaded");
             
@@ -58,15 +70,25 @@ namespace Pimung
             WhatDoToday.Location = new Point( this.Width - WhatDoToday.Width - 30, 30);
             StrokeOval.Location = new Point(this.Width / 2 - (WhatDoToday.Location.X - this.Width / 2), 80);
             StrokeOval.Width = 2 * WhatDoToday.Location.X - this.Width - 30;
+            fullOval.Location = new Point(this.Width / 2 - (WhatDoToday.Location.X - this.Width / 2), 80);
+            if (songPlayed != -1)
+                fullOval.Width = Convert.ToInt32(StrokeOval.Width * MusicToTable[songPlayed].controls.currentPosition / MusicToTable[songPlayed].currentMedia.duration);
+            else
+                fullOval.Width = 0;
+            elapsedTime.Location = new Point(StrokeOval.Location.X - elapsedTime.Width / 2, StrokeOval.Location.Y - elapsedTime.Height - 10);
+            totalTime.Location = new Point(StrokeOval.Location.X + StrokeOval.Width - totalTime.Width / 2, elapsedTime.Location.Y);
             LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
+            nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
             songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
             songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
             songGrid.Width = this.Width - LeftMenu.Width - 20;
-            
-
             ReplayButton.Location = new Point(StrokeOval.Location.X, StrokeOval.Location.Y + StrokeOval.Height + 20);
             ShuffleButton.Location = new Point(StrokeOval.Location.X + StrokeOval.Width - ShuffleButton.Width, StrokeOval.Location.Y + StrokeOval.Height + 20);
+        }
 
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 38, 126, 200), 1), WhatDoToday.Location.X + 40, WhatDoToday.Location.Y + Convert.ToInt32(2.5 * WhatDoToday.Height), WhatDoToday.Location.X + WhatDoToday.Width - 40, WhatDoToday.Location.Y + Convert.ToInt32(2.5 * WhatDoToday.Height));
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e) //Panel2 contains the line under the play, for/back wardButtons
@@ -105,6 +127,14 @@ namespace Pimung
                 songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
                 songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
             }
+            else if(startDragging)
+            {
+                panel1.Height = panel1OriginalHeight;
+                panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
+                LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
+                songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
+                songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
+            }
         }
 
         private void panel2_MouseUp(object sender, MouseEventArgs e)
@@ -131,6 +161,8 @@ namespace Pimung
 
          private void LoadMusicInTable(List<string> songs)
         {
+            isPlaying = false;
+            PlayButton.BackgroundImage = Pimung.Properties.Resources.playButton2;
             if (songPlayed != -1)
                 MusicToTable[songPlayed].controls.stop();
             MusicToTable.Clear();
@@ -206,6 +238,11 @@ namespace Pimung
                              break;
                          }
                      }
+                     aTimer.Enabled = true;
+                     aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                     totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+                     nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+                     nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
                      isPlaying = true;
                  }
                  else if (!viaWifi)
@@ -213,19 +250,33 @@ namespace Pimung
                      if (isPlaying)
                      {
                          MusicToTable[songPlayed].controls.pause();
+                         aTimer.Enabled = true;
+                         aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                         //totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+                         //nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
                          isPlaying = false;
                      }
                      else if (songPlayed == -1)
                      {
                          MusicToTable[0].controls.play();
-                         MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                         MusicToTable[0].settings.setMode("loop", loopMusic);
                          songPlayed = 0;
+                         aTimer.Enabled = true;
+                         aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                         totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+                         nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+                         nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
                          isPlaying = true;
                      }
                      else
                      {
                          MusicToTable[songPlayed].controls.play();
                          MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                         aTimer.Enabled = true;
+                         aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                         totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+                         nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+                         nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
                          isPlaying = true;
                      }
                  }
@@ -244,7 +295,6 @@ namespace Pimung
              viaWifi = !viaWifi;
          }
 
-         
          private void ReplayButton_Click(object sender, EventArgs e)
          {
              loopMusic = !loopMusic;
@@ -255,6 +305,44 @@ namespace Pimung
              if (songPlayed != -1)
                 MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
          }
+
+         private  void OnTimedEvent(object e, ElapsedEventArgs args)
+         {
+             try
+             {        
+                if (elapsedTime.InvokeRequired)
+                {
+                    elapsedTime.Invoke((Action)delegate { OnTimedEvent(e, args); });
+                    return;
+                 }
+                
+             }
+             catch
+             {
+                 this.Close();
+             }
+             try
+             {
+                 if(isPlaying)
+                    elapsedTime.Text = MusicToTable[songPlayed].controls.currentPositionString;
+                 //else
+                     //elapsedTime.Text = "00:00";
+                 fullOval.Width = Convert.ToInt32(StrokeOval.Width * MusicToTable[songPlayed].controls.currentPosition / MusicToTable[songPlayed].currentMedia.duration);
+             }
+             catch
+             {
+                 this.Close();
+             }
+
+             var timer = (System.Timers.Timer)e; // Get the timer that fired the event
+             if (isPlaying)
+                 timer.Start();
+             else
+                 timer.Stop();
+             Console.WriteLine(isPlaying);
+         }
+
+         
 
        //private void player_PlayStateChange(int NewState)
        //{

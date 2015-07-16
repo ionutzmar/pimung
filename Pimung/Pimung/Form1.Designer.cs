@@ -28,18 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChooseMusic));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkWifi = new System.Windows.Forms.CheckBox();
             this.AddMusicBotton = new System.Windows.Forms.Label();
-            this.StrokeOval = new System.Windows.Forms.PictureBox();
-            this.ReplayButton = new System.Windows.Forms.PictureBox();
-            this.ShuffleButton = new System.Windows.Forms.PictureBox();
             this.WhatDoToday = new System.Windows.Forms.Label();
-            this.BackwardButton = new System.Windows.Forms.PictureBox();
-            this.ForwardButton = new System.Windows.Forms.PictureBox();
-            this.PlayButton = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.LeftMenu = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
@@ -53,16 +49,26 @@
             this.songArtist = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songGenre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.checkWifi = new System.Windows.Forms.CheckBox();
+            this.totalTime = new System.Windows.Forms.Label();
+            this.elapsedTime = new System.Windows.Forms.Label();
+            this.fullOval = new System.Windows.Forms.PictureBox();
+            this.StrokeOval = new System.Windows.Forms.PictureBox();
+            this.ReplayButton = new System.Windows.Forms.PictureBox();
+            this.ShuffleButton = new System.Windows.Forms.PictureBox();
+            this.BackwardButton = new System.Windows.Forms.PictureBox();
+            this.ForwardButton = new System.Windows.Forms.PictureBox();
+            this.PlayButton = new System.Windows.Forms.PictureBox();
+            this.nowPlaying = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            this.LeftMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.songGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fullOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReplayButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ShuffleButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackwardButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ForwardButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).BeginInit();
-            this.LeftMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.songGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -70,8 +76,12 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.nowPlaying);
+            this.panel1.Controls.Add(this.elapsedTime);
+            this.panel1.Controls.Add(this.totalTime);
             this.panel1.Controls.Add(this.checkWifi);
             this.panel1.Controls.Add(this.AddMusicBotton);
+            this.panel1.Controls.Add(this.fullOval);
             this.panel1.Controls.Add(this.StrokeOval);
             this.panel1.Controls.Add(this.ReplayButton);
             this.panel1.Controls.Add(this.ShuffleButton);
@@ -83,6 +93,20 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(980, 145);
             this.panel1.TabIndex = 0;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // checkWifi
+            // 
+            this.checkWifi.AutoSize = true;
+            this.checkWifi.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.checkWifi.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.checkWifi.Location = new System.Drawing.Point(423, 63);
+            this.checkWifi.Name = "checkWifi";
+            this.checkWifi.Size = new System.Drawing.Size(201, 30);
+            this.checkWifi.TabIndex = 7;
+            this.checkWifi.Text = "Send music via WiFi";
+            this.checkWifi.UseVisualStyleBackColor = true;
+            this.checkWifi.CheckStateChanged += new System.EventHandler(this.checkWifi_CheckStateChanged);
             // 
             // AddMusicBotton
             // 
@@ -97,37 +121,6 @@
             this.AddMusicBotton.Text = "Add music in your player";
             this.AddMusicBotton.Click += new System.EventHandler(this.AddMusicBotton_Click);
             // 
-            // StrokeOval
-            // 
-            this.StrokeOval.BackgroundImage = global::Pimung.Properties.Resources.StrokeOval;
-            this.StrokeOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.StrokeOval.Location = new System.Drawing.Point(423, 119);
-            this.StrokeOval.Name = "StrokeOval";
-            this.StrokeOval.Size = new System.Drawing.Size(371, 19);
-            this.StrokeOval.TabIndex = 5;
-            this.StrokeOval.TabStop = false;
-            // 
-            // ReplayButton
-            // 
-            this.ReplayButton.BackgroundImage = global::Pimung.Properties.Resources.Replay;
-            this.ReplayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ReplayButton.Location = new System.Drawing.Point(720, 73);
-            this.ReplayButton.Name = "ReplayButton";
-            this.ReplayButton.Size = new System.Drawing.Size(32, 20);
-            this.ReplayButton.TabIndex = 4;
-            this.ReplayButton.TabStop = false;
-            this.ReplayButton.Click += new System.EventHandler(this.ReplayButton_Click);
-            // 
-            // ShuffleButton
-            // 
-            this.ShuffleButton.BackgroundImage = global::Pimung.Properties.Resources.Shuffle;
-            this.ShuffleButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ShuffleButton.Location = new System.Drawing.Point(385, 56);
-            this.ShuffleButton.Name = "ShuffleButton";
-            this.ShuffleButton.Size = new System.Drawing.Size(32, 20);
-            this.ShuffleButton.TabIndex = 4;
-            this.ShuffleButton.TabStop = false;
-            // 
             // WhatDoToday
             // 
             this.WhatDoToday.AutoSize = true;
@@ -138,37 +131,6 @@
             this.WhatDoToday.Size = new System.Drawing.Size(348, 33);
             this.WhatDoToday.TabIndex = 3;
             this.WhatDoToday.Text = "What do you wanna do today?";
-            // 
-            // BackwardButton
-            // 
-            this.BackwardButton.BackgroundImage = global::Pimung.Properties.Resources.BackwardButton1;
-            this.BackwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.BackwardButton.Location = new System.Drawing.Point(96, 56);
-            this.BackwardButton.Name = "BackwardButton";
-            this.BackwardButton.Size = new System.Drawing.Size(48, 30);
-            this.BackwardButton.TabIndex = 2;
-            this.BackwardButton.TabStop = false;
-            // 
-            // ForwardButton
-            // 
-            this.ForwardButton.BackgroundImage = global::Pimung.Properties.Resources.ForwardButton1;
-            this.ForwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ForwardButton.Location = new System.Drawing.Point(288, 56);
-            this.ForwardButton.Name = "ForwardButton";
-            this.ForwardButton.Size = new System.Drawing.Size(48, 30);
-            this.ForwardButton.TabIndex = 1;
-            this.ForwardButton.TabStop = false;
-            // 
-            // PlayButton
-            // 
-            this.PlayButton.BackgroundImage = global::Pimung.Properties.Resources.playButton2;
-            this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PlayButton.Location = new System.Drawing.Point(195, 43);
-            this.PlayButton.Name = "PlayButton";
-            this.PlayButton.Size = new System.Drawing.Size(40, 50);
-            this.PlayButton.TabIndex = 0;
-            this.PlayButton.TabStop = false;
-            this.PlayButton.Click += new System.EventHandler(this.playStopMusic);
             // 
             // panel2
             // 
@@ -215,7 +177,7 @@
             // 
             // plannerButton
             // 
-            this.plannerButton.BackColor = System.Drawing.Color.Gainsboro;
+            this.plannerButton.BackColor = System.Drawing.Color.WhiteSmoke;
             this.plannerButton.FlatAppearance.BorderSize = 0;
             this.plannerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.plannerButton.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -264,27 +226,27 @@
             this.songGrid.AllowUserToDeleteRows = false;
             this.songGrid.AllowUserToOrderColumns = true;
             this.songGrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.songGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.songGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.songGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.songGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             this.songGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.songGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleVertical;
             this.songGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.songGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.songGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.songGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.songGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.songName,
@@ -292,14 +254,14 @@
             this.songArtist,
             this.songAlbum,
             this.songGenre});
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.songGrid.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.songGrid.DefaultCellStyle = dataGridViewCellStyle3;
             this.songGrid.EnableHeadersVisualStyles = false;
             this.songGrid.GridColor = System.Drawing.Color.Gainsboro;
             this.songGrid.Location = new System.Drawing.Point(166, 186);
@@ -341,18 +303,109 @@
             this.songGenre.Name = "songGenre";
             this.songGenre.ReadOnly = true;
             // 
-            // checkWifi
+            // totalTime
             // 
-            this.checkWifi.AutoSize = true;
-            this.checkWifi.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.checkWifi.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.checkWifi.Location = new System.Drawing.Point(423, 63);
-            this.checkWifi.Name = "checkWifi";
-            this.checkWifi.Size = new System.Drawing.Size(201, 30);
-            this.checkWifi.TabIndex = 7;
-            this.checkWifi.Text = "Send music via WiFi";
-            this.checkWifi.UseVisualStyleBackColor = true;
-            this.checkWifi.CheckStateChanged += new System.EventHandler(this.checkWifi_CheckStateChanged);
+            this.totalTime.AutoSize = true;
+            this.totalTime.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.totalTime.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.totalTime.Location = new System.Drawing.Point(776, 94);
+            this.totalTime.Name = "totalTime";
+            this.totalTime.Size = new System.Drawing.Size(34, 13);
+            this.totalTime.TabIndex = 8;
+            this.totalTime.Text = "00:00";
+            // 
+            // elapsedTime
+            // 
+            this.elapsedTime.AutoSize = true;
+            this.elapsedTime.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.elapsedTime.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.elapsedTime.Location = new System.Drawing.Point(423, 100);
+            this.elapsedTime.Name = "elapsedTime";
+            this.elapsedTime.Size = new System.Drawing.Size(34, 13);
+            this.elapsedTime.TabIndex = 9;
+            this.elapsedTime.Text = "00:00";
+            // 
+            // fullOval
+            // 
+            this.fullOval.BackgroundImage = global::Pimung.Properties.Resources.FullOval;
+            this.fullOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.fullOval.Location = new System.Drawing.Point(342, 12);
+            this.fullOval.Name = "fullOval";
+            this.fullOval.Size = new System.Drawing.Size(371, 19);
+            this.fullOval.TabIndex = 5;
+            this.fullOval.TabStop = false;
+            // 
+            // StrokeOval
+            // 
+            this.StrokeOval.BackgroundImage = global::Pimung.Properties.Resources.StrokeOval;
+            this.StrokeOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.StrokeOval.Location = new System.Drawing.Point(426, 119);
+            this.StrokeOval.Name = "StrokeOval";
+            this.StrokeOval.Size = new System.Drawing.Size(371, 19);
+            this.StrokeOval.TabIndex = 5;
+            this.StrokeOval.TabStop = false;
+            // 
+            // ReplayButton
+            // 
+            this.ReplayButton.BackgroundImage = global::Pimung.Properties.Resources.Replay;
+            this.ReplayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ReplayButton.Location = new System.Drawing.Point(720, 73);
+            this.ReplayButton.Name = "ReplayButton";
+            this.ReplayButton.Size = new System.Drawing.Size(32, 20);
+            this.ReplayButton.TabIndex = 4;
+            this.ReplayButton.TabStop = false;
+            this.ReplayButton.Click += new System.EventHandler(this.ReplayButton_Click);
+            // 
+            // ShuffleButton
+            // 
+            this.ShuffleButton.BackgroundImage = global::Pimung.Properties.Resources.Shuffle;
+            this.ShuffleButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ShuffleButton.Location = new System.Drawing.Point(385, 56);
+            this.ShuffleButton.Name = "ShuffleButton";
+            this.ShuffleButton.Size = new System.Drawing.Size(32, 20);
+            this.ShuffleButton.TabIndex = 4;
+            this.ShuffleButton.TabStop = false;
+            // 
+            // BackwardButton
+            // 
+            this.BackwardButton.BackgroundImage = global::Pimung.Properties.Resources.BackwardButton1;
+            this.BackwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BackwardButton.Location = new System.Drawing.Point(96, 56);
+            this.BackwardButton.Name = "BackwardButton";
+            this.BackwardButton.Size = new System.Drawing.Size(48, 30);
+            this.BackwardButton.TabIndex = 2;
+            this.BackwardButton.TabStop = false;
+            // 
+            // ForwardButton
+            // 
+            this.ForwardButton.BackgroundImage = global::Pimung.Properties.Resources.ForwardButton1;
+            this.ForwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ForwardButton.Location = new System.Drawing.Point(288, 56);
+            this.ForwardButton.Name = "ForwardButton";
+            this.ForwardButton.Size = new System.Drawing.Size(48, 30);
+            this.ForwardButton.TabIndex = 1;
+            this.ForwardButton.TabStop = false;
+            // 
+            // PlayButton
+            // 
+            this.PlayButton.BackgroundImage = global::Pimung.Properties.Resources.playButton2;
+            this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.PlayButton.Location = new System.Drawing.Point(195, 43);
+            this.PlayButton.Name = "PlayButton";
+            this.PlayButton.Size = new System.Drawing.Size(40, 50);
+            this.PlayButton.TabIndex = 0;
+            this.PlayButton.TabStop = false;
+            this.PlayButton.Click += new System.EventHandler(this.playStopMusic);
+            // 
+            // nowPlaying
+            // 
+            this.nowPlaying.AutoSize = true;
+            this.nowPlaying.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.nowPlaying.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.nowPlaying.Location = new System.Drawing.Point(310, 27);
+            this.nowPlaying.Name = "nowPlaying";
+            this.nowPlaying.Size = new System.Drawing.Size(0, 26);
+            this.nowPlaying.TabIndex = 10;
             // 
             // ChooseMusic
             // 
@@ -364,21 +417,23 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.LeftMenu);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(950, 500);
             this.Name = "ChooseMusic";
-            this.Text = "Form1";
+            this.Text = "Pimung";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.LeftMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.songGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fullOval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReplayButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ShuffleButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackwardButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ForwardButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).EndInit();
-            this.LeftMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.songGrid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -408,6 +463,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn songAlbum;
         private System.Windows.Forms.DataGridViewTextBoxColumn songGenre;
         private System.Windows.Forms.CheckBox checkWifi;
+        private System.Windows.Forms.Label elapsedTime;
+        private System.Windows.Forms.Label totalTime;
+        private System.Windows.Forms.PictureBox fullOval;
+        private System.Windows.Forms.Label nowPlaying;
     }
 }
 
