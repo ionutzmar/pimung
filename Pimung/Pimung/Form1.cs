@@ -26,7 +26,6 @@ namespace Pimung
         Boolean isPlaying = false;
         Boolean viaWifi = false;
         Boolean loopMusic = false;
-        Boolean isTiming = false;
         System.Timers.Timer aTimer = new System.Timers.Timer();
 
 
@@ -44,7 +43,8 @@ namespace Pimung
             StrokeOval.Height = 10;
             fullOval.Height = 10;
             AddMusicBotton.Location = new Point(50, panel1OriginalHeight + 50);
-            checkWifi.Location = new Point(50, AddMusicBotton.Location.Y + AddMusicBotton.Height + 10);
+            removeMusicButton.Location = new Point(AddMusicBotton.Location.X, AddMusicBotton.Location.Y + AddMusicBotton.Height + 10);
+            checkWifi.Location = new Point(removeMusicButton.Location.X + removeMusicButton.Width + 20, AddMusicBotton.Location.Y);
             BackwardButton.Location = new Point(40, 70 - BackwardButton.Height / 2);
             PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 40, 70 - PlayButton.Height / 2);
             ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 40, 70 - ForwardButton.Height / 2);
@@ -56,6 +56,9 @@ namespace Pimung
             //aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             aTimer.Start(); 
 
+
+            RemoveMusicDialog rmMusic = new RemoveMusicDialog();
+            rmMusic.Show();
             Console.WriteLine("Form1 loaded");
             
         }
@@ -340,6 +343,103 @@ namespace Pimung
              else
                  timer.Stop();
              Console.WriteLine(isPlaying);
+         }
+
+         private void ForwardButton_Click(object sender, EventArgs e)
+         {
+             if (isPlaying && (songPlayed != -1))
+             {
+                MusicToTable[songPlayed].controls.stop();
+
+                for (int i = 0; i < MusicToTable.Count; i++)
+                {
+
+                     if (i == MusicToTable.Count - 1)
+                     {
+                         for (int k = 0; k < MusicToTable.Count; k++)
+                         {
+                             if (songGrid.Rows[0].Cells[0].FormattedValue.ToString() == MusicToTable[k].currentMedia.getItemInfo("Title"))
+                             {
+                                 songPlayed = k;
+                                 break;
+                             }
+                        }
+                        break;
+                     }
+                     if (songGrid.Rows[i].Cells[0].FormattedValue.ToString() == MusicToTable[songPlayed].currentMedia.getItemInfo("Title"))
+                     {
+
+                         for (int m = 0; m < MusicToTable.Count; m++)
+                         {
+                             if(songGrid.Rows[i + 1].Cells[0].FormattedValue.ToString() == MusicToTable[m].currentMedia.getItemInfo("Title"))
+                             {
+                                 songPlayed = m;
+                                 break;
+                             }
+                         }
+                        break;
+                 }
+             }
+             
+             MusicToTable[songPlayed].controls.play();
+             MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+             totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+             nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+             nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
+             aTimer.Enabled = true;
+             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+             }
+         }
+
+         private void BackwardButton_Click(object sender, EventArgs e)
+         {
+             if (isPlaying && (songPlayed != -1))
+             {
+                 MusicToTable[songPlayed].controls.stop();
+
+                 for (int i = 0; i < MusicToTable.Count; i++)
+                 {
+
+                     if (songGrid.Rows[0].Cells[0].FormattedValue.ToString() == MusicToTable[songPlayed].currentMedia.getItemInfo("Title"))
+                     {
+                         for (int k = 0; k < MusicToTable.Count; k++)
+                         {
+                             if (songGrid.Rows[MusicToTable.Count - 1].Cells[0].FormattedValue.ToString() == MusicToTable[k].currentMedia.getItemInfo("Title"))
+                             {
+                                 songPlayed = k;
+                                 break;
+                             }
+                         }
+                         break;
+                     }
+                     if (songGrid.Rows[i].Cells[0].FormattedValue.ToString() == MusicToTable[songPlayed].currentMedia.getItemInfo("Title"))
+                     {
+
+                         for (int m = 0; m < MusicToTable.Count; m++)
+                         {
+                             if (songGrid.Rows[i - 1].Cells[0].FormattedValue.ToString() == MusicToTable[m].currentMedia.getItemInfo("Title"))
+                             {
+                                 songPlayed = m;
+                                 break;
+                             }
+                         }
+                         break;
+                     }
+                 }
+
+                 MusicToTable[songPlayed].controls.play();
+                 MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                 totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+                 nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+                 nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
+                 aTimer.Enabled = true;
+                 aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+             }
+         }
+
+         private void removeMusicButton_Click(object sender, EventArgs e)
+         {
+
          }
 
          

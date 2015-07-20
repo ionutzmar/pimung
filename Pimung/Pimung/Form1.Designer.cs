@@ -33,9 +33,19 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChooseMusic));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.nowPlaying = new System.Windows.Forms.Label();
+            this.elapsedTime = new System.Windows.Forms.Label();
+            this.totalTime = new System.Windows.Forms.Label();
             this.checkWifi = new System.Windows.Forms.CheckBox();
             this.AddMusicBotton = new System.Windows.Forms.Label();
+            this.fullOval = new System.Windows.Forms.PictureBox();
+            this.StrokeOval = new System.Windows.Forms.PictureBox();
+            this.ReplayButton = new System.Windows.Forms.PictureBox();
+            this.ShuffleButton = new System.Windows.Forms.PictureBox();
             this.WhatDoToday = new System.Windows.Forms.Label();
+            this.BackwardButton = new System.Windows.Forms.PictureBox();
+            this.ForwardButton = new System.Windows.Forms.PictureBox();
+            this.PlayButton = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.LeftMenu = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
@@ -49,19 +59,8 @@
             this.songArtist = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songGenre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalTime = new System.Windows.Forms.Label();
-            this.elapsedTime = new System.Windows.Forms.Label();
-            this.fullOval = new System.Windows.Forms.PictureBox();
-            this.StrokeOval = new System.Windows.Forms.PictureBox();
-            this.ReplayButton = new System.Windows.Forms.PictureBox();
-            this.ShuffleButton = new System.Windows.Forms.PictureBox();
-            this.BackwardButton = new System.Windows.Forms.PictureBox();
-            this.ForwardButton = new System.Windows.Forms.PictureBox();
-            this.PlayButton = new System.Windows.Forms.PictureBox();
-            this.nowPlaying = new System.Windows.Forms.Label();
+            this.removeMusicButton = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            this.LeftMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.songGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fullOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReplayButton)).BeginInit();
@@ -69,6 +68,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.BackwardButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ForwardButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).BeginInit();
+            this.LeftMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.songGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -76,6 +77,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.removeMusicButton);
             this.panel1.Controls.Add(this.nowPlaying);
             this.panel1.Controls.Add(this.elapsedTime);
             this.panel1.Controls.Add(this.totalTime);
@@ -94,6 +96,38 @@
             this.panel1.Size = new System.Drawing.Size(980, 145);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // nowPlaying
+            // 
+            this.nowPlaying.AutoSize = true;
+            this.nowPlaying.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.nowPlaying.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.nowPlaying.Location = new System.Drawing.Point(310, 27);
+            this.nowPlaying.Name = "nowPlaying";
+            this.nowPlaying.Size = new System.Drawing.Size(0, 26);
+            this.nowPlaying.TabIndex = 10;
+            // 
+            // elapsedTime
+            // 
+            this.elapsedTime.AutoSize = true;
+            this.elapsedTime.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.elapsedTime.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.elapsedTime.Location = new System.Drawing.Point(423, 100);
+            this.elapsedTime.Name = "elapsedTime";
+            this.elapsedTime.Size = new System.Drawing.Size(34, 13);
+            this.elapsedTime.TabIndex = 9;
+            this.elapsedTime.Text = "00:00";
+            // 
+            // totalTime
+            // 
+            this.totalTime.AutoSize = true;
+            this.totalTime.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.totalTime.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.totalTime.Location = new System.Drawing.Point(776, 94);
+            this.totalTime.Name = "totalTime";
+            this.totalTime.Size = new System.Drawing.Size(34, 13);
+            this.totalTime.TabIndex = 8;
+            this.totalTime.Text = "00:00";
             // 
             // checkWifi
             // 
@@ -121,6 +155,47 @@
             this.AddMusicBotton.Text = "Add music in your player";
             this.AddMusicBotton.Click += new System.EventHandler(this.AddMusicBotton_Click);
             // 
+            // fullOval
+            // 
+            this.fullOval.BackgroundImage = global::Pimung.Properties.Resources.FullOval;
+            this.fullOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.fullOval.Location = new System.Drawing.Point(342, 12);
+            this.fullOval.Name = "fullOval";
+            this.fullOval.Size = new System.Drawing.Size(371, 19);
+            this.fullOval.TabIndex = 5;
+            this.fullOval.TabStop = false;
+            // 
+            // StrokeOval
+            // 
+            this.StrokeOval.BackgroundImage = global::Pimung.Properties.Resources.StrokeOval;
+            this.StrokeOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.StrokeOval.Location = new System.Drawing.Point(426, 119);
+            this.StrokeOval.Name = "StrokeOval";
+            this.StrokeOval.Size = new System.Drawing.Size(371, 19);
+            this.StrokeOval.TabIndex = 5;
+            this.StrokeOval.TabStop = false;
+            // 
+            // ReplayButton
+            // 
+            this.ReplayButton.BackgroundImage = global::Pimung.Properties.Resources.Replay;
+            this.ReplayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ReplayButton.Location = new System.Drawing.Point(720, 73);
+            this.ReplayButton.Name = "ReplayButton";
+            this.ReplayButton.Size = new System.Drawing.Size(32, 20);
+            this.ReplayButton.TabIndex = 4;
+            this.ReplayButton.TabStop = false;
+            this.ReplayButton.Click += new System.EventHandler(this.ReplayButton_Click);
+            // 
+            // ShuffleButton
+            // 
+            this.ShuffleButton.BackgroundImage = global::Pimung.Properties.Resources.Shuffle;
+            this.ShuffleButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ShuffleButton.Location = new System.Drawing.Point(385, 56);
+            this.ShuffleButton.Name = "ShuffleButton";
+            this.ShuffleButton.Size = new System.Drawing.Size(32, 20);
+            this.ShuffleButton.TabIndex = 4;
+            this.ShuffleButton.TabStop = false;
+            // 
             // WhatDoToday
             // 
             this.WhatDoToday.AutoSize = true;
@@ -131,6 +206,42 @@
             this.WhatDoToday.Size = new System.Drawing.Size(348, 33);
             this.WhatDoToday.TabIndex = 3;
             this.WhatDoToday.Text = "What do you wanna do today?";
+            // 
+            // BackwardButton
+            // 
+            this.BackwardButton.BackgroundImage = global::Pimung.Properties.Resources.BackwardButton1;
+            this.BackwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BackwardButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BackwardButton.Location = new System.Drawing.Point(96, 56);
+            this.BackwardButton.Name = "BackwardButton";
+            this.BackwardButton.Size = new System.Drawing.Size(48, 30);
+            this.BackwardButton.TabIndex = 2;
+            this.BackwardButton.TabStop = false;
+            this.BackwardButton.Click += new System.EventHandler(this.BackwardButton_Click);
+            // 
+            // ForwardButton
+            // 
+            this.ForwardButton.BackgroundImage = global::Pimung.Properties.Resources.ForwardButton1;
+            this.ForwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ForwardButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ForwardButton.Location = new System.Drawing.Point(288, 56);
+            this.ForwardButton.Name = "ForwardButton";
+            this.ForwardButton.Size = new System.Drawing.Size(48, 30);
+            this.ForwardButton.TabIndex = 1;
+            this.ForwardButton.TabStop = false;
+            this.ForwardButton.Click += new System.EventHandler(this.ForwardButton_Click);
+            // 
+            // PlayButton
+            // 
+            this.PlayButton.BackgroundImage = global::Pimung.Properties.Resources.playButton2;
+            this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.PlayButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.PlayButton.Location = new System.Drawing.Point(195, 43);
+            this.PlayButton.Name = "PlayButton";
+            this.PlayButton.Size = new System.Drawing.Size(40, 50);
+            this.PlayButton.TabIndex = 0;
+            this.PlayButton.TabStop = false;
+            this.PlayButton.Click += new System.EventHandler(this.playStopMusic);
             // 
             // panel2
             // 
@@ -303,109 +414,18 @@
             this.songGenre.Name = "songGenre";
             this.songGenre.ReadOnly = true;
             // 
-            // totalTime
+            // removeMusicButton
             // 
-            this.totalTime.AutoSize = true;
-            this.totalTime.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.totalTime.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.totalTime.Location = new System.Drawing.Point(776, 94);
-            this.totalTime.Name = "totalTime";
-            this.totalTime.Size = new System.Drawing.Size(34, 13);
-            this.totalTime.TabIndex = 8;
-            this.totalTime.Text = "00:00";
-            // 
-            // elapsedTime
-            // 
-            this.elapsedTime.AutoSize = true;
-            this.elapsedTime.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.elapsedTime.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.elapsedTime.Location = new System.Drawing.Point(423, 100);
-            this.elapsedTime.Name = "elapsedTime";
-            this.elapsedTime.Size = new System.Drawing.Size(34, 13);
-            this.elapsedTime.TabIndex = 9;
-            this.elapsedTime.Text = "00:00";
-            // 
-            // fullOval
-            // 
-            this.fullOval.BackgroundImage = global::Pimung.Properties.Resources.FullOval;
-            this.fullOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.fullOval.Location = new System.Drawing.Point(342, 12);
-            this.fullOval.Name = "fullOval";
-            this.fullOval.Size = new System.Drawing.Size(371, 19);
-            this.fullOval.TabIndex = 5;
-            this.fullOval.TabStop = false;
-            // 
-            // StrokeOval
-            // 
-            this.StrokeOval.BackgroundImage = global::Pimung.Properties.Resources.StrokeOval;
-            this.StrokeOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.StrokeOval.Location = new System.Drawing.Point(426, 119);
-            this.StrokeOval.Name = "StrokeOval";
-            this.StrokeOval.Size = new System.Drawing.Size(371, 19);
-            this.StrokeOval.TabIndex = 5;
-            this.StrokeOval.TabStop = false;
-            // 
-            // ReplayButton
-            // 
-            this.ReplayButton.BackgroundImage = global::Pimung.Properties.Resources.Replay;
-            this.ReplayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ReplayButton.Location = new System.Drawing.Point(720, 73);
-            this.ReplayButton.Name = "ReplayButton";
-            this.ReplayButton.Size = new System.Drawing.Size(32, 20);
-            this.ReplayButton.TabIndex = 4;
-            this.ReplayButton.TabStop = false;
-            this.ReplayButton.Click += new System.EventHandler(this.ReplayButton_Click);
-            // 
-            // ShuffleButton
-            // 
-            this.ShuffleButton.BackgroundImage = global::Pimung.Properties.Resources.Shuffle;
-            this.ShuffleButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ShuffleButton.Location = new System.Drawing.Point(385, 56);
-            this.ShuffleButton.Name = "ShuffleButton";
-            this.ShuffleButton.Size = new System.Drawing.Size(32, 20);
-            this.ShuffleButton.TabIndex = 4;
-            this.ShuffleButton.TabStop = false;
-            // 
-            // BackwardButton
-            // 
-            this.BackwardButton.BackgroundImage = global::Pimung.Properties.Resources.BackwardButton1;
-            this.BackwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.BackwardButton.Location = new System.Drawing.Point(96, 56);
-            this.BackwardButton.Name = "BackwardButton";
-            this.BackwardButton.Size = new System.Drawing.Size(48, 30);
-            this.BackwardButton.TabIndex = 2;
-            this.BackwardButton.TabStop = false;
-            // 
-            // ForwardButton
-            // 
-            this.ForwardButton.BackgroundImage = global::Pimung.Properties.Resources.ForwardButton1;
-            this.ForwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ForwardButton.Location = new System.Drawing.Point(288, 56);
-            this.ForwardButton.Name = "ForwardButton";
-            this.ForwardButton.Size = new System.Drawing.Size(48, 30);
-            this.ForwardButton.TabIndex = 1;
-            this.ForwardButton.TabStop = false;
-            // 
-            // PlayButton
-            // 
-            this.PlayButton.BackgroundImage = global::Pimung.Properties.Resources.playButton2;
-            this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PlayButton.Location = new System.Drawing.Point(195, 43);
-            this.PlayButton.Name = "PlayButton";
-            this.PlayButton.Size = new System.Drawing.Size(40, 50);
-            this.PlayButton.TabIndex = 0;
-            this.PlayButton.TabStop = false;
-            this.PlayButton.Click += new System.EventHandler(this.playStopMusic);
-            // 
-            // nowPlaying
-            // 
-            this.nowPlaying.AutoSize = true;
-            this.nowPlaying.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.nowPlaying.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.nowPlaying.Location = new System.Drawing.Point(310, 27);
-            this.nowPlaying.Name = "nowPlaying";
-            this.nowPlaying.Size = new System.Drawing.Size(0, 26);
-            this.nowPlaying.TabIndex = 10;
+            this.removeMusicButton.AutoSize = true;
+            this.removeMusicButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.removeMusicButton.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.removeMusicButton.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.removeMusicButton.Location = new System.Drawing.Point(174, 73);
+            this.removeMusicButton.Name = "removeMusicButton";
+            this.removeMusicButton.Size = new System.Drawing.Size(283, 26);
+            this.removeMusicButton.TabIndex = 6;
+            this.removeMusicButton.Text = "Remove music from your player";
+            this.removeMusicButton.Click += new System.EventHandler(this.removeMusicButton_Click);
             // 
             // ChooseMusic
             // 
@@ -425,8 +445,6 @@
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.LeftMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.songGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fullOval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReplayButton)).EndInit();
@@ -434,6 +452,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.BackwardButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ForwardButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).EndInit();
+            this.LeftMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.songGrid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -467,6 +487,7 @@
         private System.Windows.Forms.Label totalTime;
         private System.Windows.Forms.PictureBox fullOval;
         private System.Windows.Forms.Label nowPlaying;
+        private System.Windows.Forms.Label removeMusicButton;
     }
 }
 
