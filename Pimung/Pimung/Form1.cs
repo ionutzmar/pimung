@@ -11,25 +11,27 @@ using System.Drawing.Drawing2D;
 using WMPLib;
 using System.Timers;
 
-
 namespace Pimung
 {
-    public partial class ChooseMusic : Form
+    public partial class Form1 : Form
     {
 
         Boolean startDragging;
         int panel1OriginalHeight;
-        List<string> SongsPaths = new List<string>();
-        List<WMPLib.WindowsMediaPlayer> MusicToTable = new List<WMPLib.WindowsMediaPlayer>();
+        internal List<string> SongsPaths = new List<string>();
+        internal List<WMPLib.WindowsMediaPlayer> MusicToTable = new List<WMPLib.WindowsMediaPlayer>();
         int amount, counter = 0; // counts the number of times 'AddMusicInTable' was called. Useful for adding music to table.
         int songPlayed = -1; //index of the last song palyed
         Boolean isPlaying = false;
         Boolean viaWifi = false;
         Boolean loopMusic = false;
+        Boolean shuffleMusic = false;
+        internal Boolean rmMusicIsOpen = false;
         System.Timers.Timer aTimer = new System.Timers.Timer();
+        Random random = new Random();
+        int randomSong;
 
-
-        public ChooseMusic()
+        public Form1()
         {
             InitializeComponent();
         }
@@ -54,11 +56,15 @@ namespace Pimung
             aTimer.Enabled = true;
             aTimer.Interval = 200;
             //aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Start(); 
+            aTimer.Start();
 
-
-            RemoveMusicDialog rmMusic = new RemoveMusicDialog();
-            rmMusic.Show();
+            if (Pimung.Properties.Settings.Default.paths != null)
+            {
+                SongsPaths = Pimung.Properties.Settings.Default.paths;
+                LoadMusicInTable(SongsPaths);
+                Console.WriteLine(SongsPaths);
+            }
+            Console.WriteLine(Pimung.Properties.Settings.Default.proba);
             Console.WriteLine("Form1 loaded");
             
         }
@@ -162,12 +168,22 @@ namespace Pimung
 
         }
 
-         private void LoadMusicInTable(List<string> songs)
+        internal void LoadMusicInTable(List<string> songs)
         {
             isPlaying = false;
             PlayButton.BackgroundImage = Pimung.Properties.Resources.playButton2;
+            nowPlaying.Text = "";
+            elapsedTime.Text = "00:00";
+            totalTime.Text = "00:00";
+            fullOval.Width = 0;
             if (songPlayed != -1)
+            {
+                MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+                MusicToTable[songPlayed].settings.setMode("loop", false);
                 MusicToTable[songPlayed].controls.stop();
+                songPlayed = -1;
+            }
             MusicToTable.Clear();
             amount = songs.Count;
 
@@ -227,6 +243,8 @@ namespace Pimung
                      if (songPlayed != -1)
                      {
                          MusicToTable[songPlayed].settings.setMode("loop", false);
+                         MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                         aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
                          MusicToTable[songPlayed].controls.stop();
                      }
 
@@ -234,13 +252,13 @@ namespace Pimung
                      {
                          if (songGrid.Rows[songGrid.CurrentCell.RowIndex].Cells[0].FormattedValue.ToString() == MusicToTable[i].currentMedia.getItemInfo("Title"))
                          {
-                             Console.WriteLine("Se potrivesc");
                              songPlayed = i;
                              MusicToTable[songPlayed].controls.play();
                              MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
                              break;
                          }
                      }
+                     MusicToTable[songPlayed].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
                      aTimer.Enabled = true;
                      aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
                      totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
@@ -252,9 +270,10 @@ namespace Pimung
                  {
                      if (isPlaying)
                      {
+                         MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
                          MusicToTable[songPlayed].controls.pause();
                          aTimer.Enabled = true;
-                         aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                         aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
                          //totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
                          //nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
                          isPlaying = false;
@@ -262,6 +281,7 @@ namespace Pimung
                      else if (songPlayed == -1)
                      {
                          MusicToTable[0].controls.play();
+                         MusicToTable[0].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
                          MusicToTable[0].settings.setMode("loop", loopMusic);
                          songPlayed = 0;
                          aTimer.Enabled = true;
@@ -274,6 +294,7 @@ namespace Pimung
                      else
                      {
                          MusicToTable[songPlayed].controls.play();
+                         MusicToTable[songPlayed].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
                          MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
                          aTimer.Enabled = true;
                          aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
@@ -300,40 +321,73 @@ namespace Pimung
 
          private void ReplayButton_Click(object sender, EventArgs e)
          {
-             loopMusic = !loopMusic;
-             if (loopMusic)
-                 ReplayButton.BackColor = System.Drawing.Color.Gainsboro;
-             else
-                 ReplayButton.BackColor = System.Drawing.Color.WhiteSmoke;
-             if (songPlayed != -1)
-                MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+             if (isPlaying)
+             {
+                 loopMusic = !loopMusic;
+                 if (loopMusic)
+                     ReplayButton.BackColor = System.Drawing.Color.Gainsboro;
+                 else
+                     ReplayButton.BackColor = System.Drawing.Color.WhiteSmoke;
+                 if (songPlayed != -1)
+                     MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                 if (shuffleMusic && sender.Equals(ReplayButton))
+                     ShuffleButton_Click(sender, e);
+                 Console.WriteLine("sender: " + sender.Equals(ReplayButton));
+                 Console.WriteLine("e: " + e);
+             }
+         }
+
+         private void ShuffleButton_Click(object sender, EventArgs e)
+         {
+             if (isPlaying)
+             {
+                 shuffleMusic = !shuffleMusic;
+                 if (shuffleMusic)
+                     ShuffleButton.BackColor = System.Drawing.Color.Gainsboro;
+                 else
+                     ShuffleButton.BackColor = System.Drawing.Color.WhiteSmoke;
+                 if (loopMusic && sender.Equals(ShuffleButton))
+                     ReplayButton_Click(sender, e);
+             }
          }
 
          private  void OnTimedEvent(object e, ElapsedEventArgs args)
          {
              try
-             {        
-                if (elapsedTime.InvokeRequired)
-                {
-                    elapsedTime.Invoke((Action)delegate { OnTimedEvent(e, args); });
-                    return;
-                 }
-                
-             }
-             catch
              {
+                 if (elapsedTime.InvokeRequired)
+                 {
+                     elapsedTime.Invoke((Action)delegate { OnTimedEvent(e, args); });
+                     return;
+                 }
+
+             }
+             catch(Exception exc)
+             {
+                 Console.WriteLine("here1: " + exc);
                  this.Close();
              }
              try
              {
-                 if(isPlaying)
-                    elapsedTime.Text = MusicToTable[songPlayed].controls.currentPositionString;
-                 //else
-                     //elapsedTime.Text = "00:00";
+                 if (isPlaying)
+                     elapsedTime.Text = MusicToTable[songPlayed].controls.currentPositionString;
+                 else
+                     elapsedTime.Text = "00:00";
                  fullOval.Width = Convert.ToInt32(StrokeOval.Width * MusicToTable[songPlayed].controls.currentPosition / MusicToTable[songPlayed].currentMedia.duration);
              }
-             catch
+             catch (System.OverflowException)
              {
+                //fullOval.Width is not a number (NaN)
+                // DO nothing
+             }
+             catch (System.ArgumentOutOfRangeException)
+             {
+                 //SongPlayed is greater than the MusicToTable size.
+                 //This will be solved in LoadMusicInTable(songs)
+             }
+             catch (Exception exp)
+             {
+                 Console.WriteLine("here2: " + exp);
                  this.Close();
              }
 
@@ -342,14 +396,18 @@ namespace Pimung
                  timer.Start();
              else
                  timer.Stop();
-             Console.WriteLine(isPlaying);
+
          }
 
          private void ForwardButton_Click(object sender, EventArgs e)
          {
              if (isPlaying && (songPlayed != -1))
              {
-                MusicToTable[songPlayed].controls.stop();
+
+                 MusicToTable[songPlayed].settings.setMode("loop", false);
+                 MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                 aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+                 MusicToTable[songPlayed].controls.stop();
 
                 for (int i = 0; i < MusicToTable.Count; i++)
                 {
@@ -395,6 +453,9 @@ namespace Pimung
          {
              if (isPlaying && (songPlayed != -1))
              {
+                 MusicToTable[songPlayed].settings.setMode("loop", false);
+                 MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                 aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
                  MusicToTable[songPlayed].controls.stop();
 
                  for (int i = 0; i < MusicToTable.Count; i++)
@@ -439,47 +500,91 @@ namespace Pimung
 
          private void removeMusicButton_Click(object sender, EventArgs e)
          {
+             if (!rmMusicIsOpen)
+             {
+                 RemoveMusicDialog rmMusic = new RemoveMusicDialog(this);
+                 rmMusicIsOpen = true;
+                 rmMusic.Show();
+             }
+         }
+         private void OnPlayStateChange(int NewState)
+         {
+             if (NewState == (int)WMPLib.WMPPlayState.wmppsMediaEnded)
+             {
+                 if (MusicToTable.Count == 1)
+                     MusicToTable[songPlayed].settings.setMode("loop", true);
+                 else if (isPlaying && (songPlayed != -1) && !loopMusic)
+                 {
+                     MusicToTable[songPlayed].settings.setMode("loop", false);
+                     MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                     aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+                     MusicToTable[songPlayed].controls.stop();
 
+                     if (!shuffleMusic)
+                     {
+                         for (int i = 0; i < MusicToTable.Count; i++)
+                         {
+
+                             if (i == MusicToTable.Count - 1)
+                             {
+                                 for (int k = 0; k < MusicToTable.Count; k++)
+                                 {
+                                     if (songGrid.Rows[0].Cells[0].FormattedValue.ToString() == MusicToTable[k].currentMedia.getItemInfo("Title"))
+                                     {
+                                         songPlayed = k;
+                                         break;
+                                     }
+                                 }
+                                 break;
+                             }
+                             try
+                             {
+                                 if (songGrid.Rows[i].Cells[0].FormattedValue.ToString() == MusicToTable[songPlayed].currentMedia.getItemInfo("Title"))
+                                 {
+
+                                     for (int m = 0; m < MusicToTable.Count; m++)
+                                     {
+                                         if (songGrid.Rows[i + 1].Cells[0].FormattedValue.ToString() == MusicToTable[m].currentMedia.getItemInfo("Title"))
+                                         {
+                                             songPlayed = m;
+                                             break;
+                                         }
+                                     }
+                                     break;
+                                 }
+                             }
+                             catch(Exception exp)
+                             {
+                                 Console.WriteLine(exp);
+                                 this.Close();
+                             }
+                         }
+                     }
+                     else
+                     {
+                         do
+                         {
+                             randomSong = random.Next(0, MusicToTable.Count);
+                         }
+                         while (songPlayed == randomSong);
+                         songPlayed = randomSong;
+                     }
+                     MusicToTable[songPlayed].controls.play();
+                     MusicToTable[songPlayed].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                     MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                     totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+                     nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+                     nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
+                     aTimer.Enabled = true;
+                     aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                 }
+             }
          }
 
-         
-
-       //private void player_PlayStateChange(int NewState)
-       //{
-       //    for (int i = 0; i < song.Count; i++)
-       //    {
-       //        Console.WriteLine(song[i].currentMedia.duration);
-       //        Console.WriteLine(song[i].currentMedia.getItemInfo("Album"));
-       //        song[i].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(player_PlayStateChange);
-       //        if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsPlaying)
-       //        {
-       //            //Console.WriteLine(WMPLi);
-
-       //        }
-       //    }
-       // }
-        //Console.WriteLine((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsPlaying);
-        //for (int i = 0; i < songs.count; i++)
-        //{
-        //    // wmplib.windowsmediaplayer song = new wmplib.windowsmediaplayer();
-        //    //boolean  b = song.playstate;
-        //    //song[i].playstatechange += new wmplib._wmpocxevents_playstatechangeeventhandler(player_playstatechange);
-        //    song[i].url = songs[i];
-        //    song[i].controls.play();
-        //    console.writeline(song[i].currentmedia.duration);
-        //    console.writeline(songs[i]);
-        //   // song[i].settings.mute = true;
-        //    wmplib.iwmpmedia3 media;
-        //    //media = Item;
-
-        //}
-     //   WMPLib.WindowsMediaPlayer a = new WMPLib.WindowsMediaPlayer();
-     //                a.URL = file;
-      //               a.controls.play();
-        //Label l = new Label();
-        // l.Text = "asdf";
-        //LinesTable.Controls.Add(l, 1, 0);
-
-
+         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+         {
+             Pimung.Properties.Settings.Default.paths = SongsPaths;
+             Pimung.Properties.Settings.Default.Save();
+         }
     }
 }

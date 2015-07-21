@@ -16,7 +16,7 @@ namespace Pimung
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ChooseMusic());
+            Application.Run(new Form1());
         }
     }
 }

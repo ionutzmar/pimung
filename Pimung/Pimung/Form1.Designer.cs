@@ -1,6 +1,6 @@
 ﻿namespace Pimung
 {
-    partial class ChooseMusic
+    partial class Form1
     {
         /// <summary>
         /// Required designer variable.
@@ -31,8 +31,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChooseMusic));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.removeMusicButton = new System.Windows.Forms.Label();
             this.nowPlaying = new System.Windows.Forms.Label();
             this.elapsedTime = new System.Windows.Forms.Label();
             this.totalTime = new System.Windows.Forms.Label();
@@ -59,7 +60,6 @@
             this.songArtist = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songGenre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.removeMusicButton = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fullOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).BeginInit();
@@ -96,6 +96,19 @@
             this.panel1.Size = new System.Drawing.Size(980, 145);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // removeMusicButton
+            // 
+            this.removeMusicButton.AutoSize = true;
+            this.removeMusicButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.removeMusicButton.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.removeMusicButton.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.removeMusicButton.Location = new System.Drawing.Point(174, 73);
+            this.removeMusicButton.Name = "removeMusicButton";
+            this.removeMusicButton.Size = new System.Drawing.Size(283, 26);
+            this.removeMusicButton.TabIndex = 6;
+            this.removeMusicButton.Text = "Remove music from your player";
+            this.removeMusicButton.Click += new System.EventHandler(this.removeMusicButton_Click);
             // 
             // nowPlaying
             // 
@@ -195,6 +208,7 @@
             this.ShuffleButton.Size = new System.Drawing.Size(32, 20);
             this.ShuffleButton.TabIndex = 4;
             this.ShuffleButton.TabStop = false;
+            this.ShuffleButton.Click += new System.EventHandler(this.ShuffleButton_Click);
             // 
             // WhatDoToday
             // 
@@ -414,20 +428,7 @@
             this.songGenre.Name = "songGenre";
             this.songGenre.ReadOnly = true;
             // 
-            // removeMusicButton
-            // 
-            this.removeMusicButton.AutoSize = true;
-            this.removeMusicButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.removeMusicButton.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.removeMusicButton.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.removeMusicButton.Location = new System.Drawing.Point(174, 73);
-            this.removeMusicButton.Name = "removeMusicButton";
-            this.removeMusicButton.Size = new System.Drawing.Size(283, 26);
-            this.removeMusicButton.TabIndex = 6;
-            this.removeMusicButton.Text = "Remove music from your player";
-            this.removeMusicButton.Click += new System.EventHandler(this.removeMusicButton_Click);
-            // 
-            // ChooseMusic
+            // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -439,8 +440,9 @@
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(950, 500);
-            this.Name = "ChooseMusic";
+            this.Name = "Form1";
             this.Text = "Pimung";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.panel1.ResumeLayout(false);
