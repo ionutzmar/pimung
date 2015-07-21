@@ -616,5 +616,15 @@ namespace Pimung
              Pimung.Properties.Settings.Default.paths = SongsPaths;
              Pimung.Properties.Settings.Default.Save();
          }
+
+         private void button1_Click(object sender, EventArgs e)
+         {
+             songGrid.Visible = true;
+         }
+
+         private void plannerButton_Click(object sender, EventArgs e)
+         {
+             songGrid.Visible = false;
+         }
     }
 }

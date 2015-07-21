@@ -52,7 +52,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.plannerButton = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.PlaylistsText = new System.Windows.Forms.Button();
             this.BrowseMusic = new System.Windows.Forms.OpenFileDialog();
             this.songGrid = new System.Windows.Forms.DataGridView();
             this.songName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -277,7 +276,6 @@
             this.LeftMenu.Controls.Add(this.button1);
             this.LeftMenu.Controls.Add(this.plannerButton);
             this.LeftMenu.Controls.Add(this.panel3);
-            this.LeftMenu.Controls.Add(this.PlaylistsText);
             this.LeftMenu.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.LeftMenu.Location = new System.Drawing.Point(4, 183);
             this.LeftMenu.Name = "LeftMenu";
@@ -299,6 +297,7 @@
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button1.UseMnemonic = false;
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // plannerButton
             // 
@@ -315,6 +314,7 @@
             this.plannerButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.plannerButton.UseMnemonic = false;
             this.plannerButton.UseVisualStyleBackColor = false;
+            this.plannerButton.Click += new System.EventHandler(this.plannerButton_Click);
             // 
             // panel3
             // 
@@ -322,22 +322,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(153, 10);
             this.panel3.TabIndex = 1;
-            // 
-            // PlaylistsText
-            // 
-            this.PlaylistsText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.PlaylistsText.FlatAppearance.BorderSize = 0;
-            this.PlaylistsText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PlaylistsText.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.PlaylistsText.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.PlaylistsText.Location = new System.Drawing.Point(3, 129);
-            this.PlaylistsText.Name = "PlaylistsText";
-            this.PlaylistsText.Size = new System.Drawing.Size(153, 49);
-            this.PlaylistsText.TabIndex = 0;
-            this.PlaylistsText.Text = "Playlists";
-            this.PlaylistsText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.PlaylistsText.UseMnemonic = false;
-            this.PlaylistsText.UseVisualStyleBackColor = false;
             // 
             // BrowseMusic
             // 
@@ -472,7 +456,6 @@
         private System.Windows.Forms.Button plannerButton;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button PlaylistsText;
         private System.Windows.Forms.PictureBox ShuffleButton;
         private System.Windows.Forms.PictureBox ReplayButton;
         private System.Windows.Forms.PictureBox StrokeOval;
