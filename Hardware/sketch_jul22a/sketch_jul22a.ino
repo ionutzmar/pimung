@@ -3,6 +3,9 @@
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 const int tempPin = A4;
+const int controlPin = 6;
+const int hoursPin = 7;
+const int minutesPin = 8;
 float temperature; //ACTUAL temperature
 float tempArray[200];  //An array of the last 200 temperatures
 float tempSum = 0;  // the sum of the last 200 temperatures
@@ -15,7 +18,9 @@ int minutes = 0;
 int seconds;
 unsigned long lastTime;
 unsigned long currentTime;
-
+int prevControlState;
+int prevHoursState;
+int prevMinutesState;
 
 byte grade[8] = {
   B01110,
@@ -38,9 +43,9 @@ void setup() {
   
   temp = tempSum / tempNumber;
   
-  pinMode(6, INPUT);
-  pinMode(7, INPUT);
-  pinMode(8, INPUT);
+  pinMode(controlPin, INPUT);
+  pinMode(hoursPin, INPUT);
+  pinMode(minutesPin, INPUT);
   
   lcd.createChar(0, grade);
   lastTime = millis();
@@ -85,32 +90,38 @@ void loop() {
   
   
   
-  lcd.setCursor(0, 0);
-  lcd.print(hours);
+  lcd.setCursor(4, 0);
+  if(hours / 10 == 0)
+  {
+    lcd.print(0);
+    lcd.print(hours);
+  }
+  else
+    lcd.print(hours);
   lcd.print(":");
-  lcd.print(minutes);
+  if (minutes / 10 == 0)
+  {
+    lcd.print(0);
+    lcd.print(minutes);
+  }
+  else
+    lcd.print(minutes);
   lcd.print(":");
-  lcd.print(seconds);
+  if (seconds / 10 == 0)
+  {
+    lcd.print(0);
+    lcd.print(seconds);
+  }
+  else
+    lcd.print(seconds);
   
-  lcd.setCursor(0,1);
+  lcd.setCursor(4,1);
   lcd.print(temp);
   lcd.print(" ");
   lcd.write(byte(0));
   lcd.print("C");
   
- Serial.print(hours);
- Serial.print(":");
- Serial.print(minutes);
- Serial.print(":");
- Serial.println(seconds);
- Serial.print("Pin 6 is: ");
- Serial.println(digitalRead(6));
- Serial.print("Pin 7 is: ");
- Serial.print(digitalRead(7));
- Serial.print("Pin 8 is: ");
- Serial.print(digitalRead(8));
- Serial.print("Analog value: ");
- Serial.println(analogRead(A2));
+
  
  
 }
