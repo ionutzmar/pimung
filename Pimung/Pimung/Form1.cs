@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using WMPLib;
 using System.Timers;
+using System.Net;
+using System.Net.Sockets;
 
 namespace Pimung
 {
@@ -64,6 +66,34 @@ namespace Pimung
                 LoadMusicInTable(SongsPaths);
                 Console.WriteLine(SongsPaths);
             }
+
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPAddress ipa = IPAddress.Parse("192.168.1.3");
+            IPEndPoint ipe = new IPEndPoint(ipa, 8828);
+            IPEndPoint ipThis = new IPEndPoint(IPAddress.Loopback, 8828);
+            s.Bind(ipThis);
+
+            try
+            {
+                
+               byte[] msg = System.Text.Encoding.ASCII.GetBytes("This is a test");
+               s.SendTo(msg, ipe);
+            //   int bytesSent = s.Send(msg);
+            }
+            catch (ArgumentNullException ae)
+            {
+                Console.WriteLine("ArgumentNullException : {0}", ae.ToString());
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine("SocketException : {0}", se.ToString());
+            }
+            catch (Exception se)
+            {
+                Console.WriteLine("Unexpected exception : {0}", se.ToString());
+            }
+
+
             Console.WriteLine(Pimung.Properties.Settings.Default.proba);
             Console.WriteLine("Form1 loaded");
             
