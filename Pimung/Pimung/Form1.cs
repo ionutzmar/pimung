@@ -12,6 +12,9 @@ using WMPLib;
 using System.Timers;
 using System.Net;
 using System.Net.Sockets;
+using System.IO.Ports;
+using System.Threading;
+using NAudio;
 
 namespace Pimung
 {
@@ -32,6 +35,8 @@ namespace Pimung
         System.Timers.Timer aTimer = new System.Timers.Timer();
         Random random = new Random();
         int randomSong;
+        SerialPort currentPort;
+        Boolean portFound;
 
         public Form1()
         {
@@ -67,36 +72,94 @@ namespace Pimung
                 Console.WriteLine(SongsPaths);
             }
 
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPAddress ipa = IPAddress.Parse("192.168.1.3");
-            IPEndPoint ipe = new IPEndPoint(ipa, 8828);
-            IPEndPoint ipThis = new IPEndPoint(IPAddress.Loopback, 8828);
-            s.Bind(ipThis);
+            setComPorts();
+            if(portFound)
+                Console.WriteLine(currentPort.PortName);
+
+            NAudio.Wave.WaveStream pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader("test.mp3"));
+            int oneSec = 88200 * 2;
+            byte[] buffer = new byte[oneSec];
+            int current = 0;
+            int ret = 0;
+
 
             try
             {
+                TcpClient client = new TcpClient("192.168.1.3", 8888);
+                NetworkStream ns = client.GetStream();
+                do
+                {
+                    ret = pcm.Read(buffer, 0, oneSec * 3);
+                    ns.Write(buffer, 0, oneSec);
+                    current += oneSec * 3;
+                } while (ret != -1);
                 
-               byte[] msg = System.Text.Encoding.ASCII.GetBytes("This is a test");
-               s.SendTo(msg, ipe);
-            //   int bytesSent = s.Send(msg);
             }
-            catch (ArgumentNullException ae)
+            catch
             {
-                Console.WriteLine("ArgumentNullException : {0}", ae.ToString());
+                Console.WriteLine("could not connect to server");
             }
-            catch (SocketException se)
+        }
+
+        private void setComPorts()
+        {
+            try
             {
-                Console.WriteLine("SocketException : {0}", se.ToString());
+                string[] ports = SerialPort.GetPortNames();
+                foreach(string port in ports)
+                {
+                    currentPort = new SerialPort(port, 9600);
+                    if (detectArduino())
+                    {
+                        portFound = true;
+                        break;
+                    }
+                    else
+                        portFound = false;
+                }
+
             }
-            catch (Exception se)
+            catch
             {
-                Console.WriteLine("Unexpected exception : {0}", se.ToString());
             }
 
 
-            Console.WriteLine(Pimung.Properties.Settings.Default.proba);
-            Console.WriteLine("Form1 loaded");
-            
+        }
+
+        Boolean detectArduino()
+        {
+            try
+            {
+                byte[] buffer = new byte[5];
+                buffer[0] = Convert.ToByte(16);
+                buffer[1] = Convert.ToByte(128);
+                buffer[2] = Convert.ToByte(0);
+                buffer[3] = Convert.ToByte(0);
+                buffer[4] = Convert.ToByte(4);
+                int returnAscii = 0;
+                //char returnChar = (char)returnAscii;
+                currentPort.Open();
+                currentPort.Write(buffer, 0, 5);
+                Thread.Sleep(1000);
+                int count = currentPort.BytesToRead;
+                string returnMessage = "";
+                while(count > 0)
+                {
+                    returnAscii = currentPort.ReadByte();
+                    returnMessage = returnMessage + Convert.ToChar(returnAscii);
+                    count--;
+                }
+                currentPort.Close();
+                if (returnMessage.Contains("Hello budie!"))
+                    return true;
+                else
+                    return false;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
 
 
