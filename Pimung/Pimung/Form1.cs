@@ -37,12 +37,40 @@ namespace Pimung
         int randomSong;
         SerialPort currentPort;
         Boolean portFound;
-
+        NetworkStream ns = null;
+        NAudio.Wave.WaveStream pcm = null;
+        BackgroundWorker bw = new BackgroundWorker();
+        
         public Form1()
         {
             InitializeComponent();
         }
 
+        private void play_wireless(string path)
+        {
+            if (bw.IsBusy)
+            {
+                bw.CancelAsync();
+                while (bw.IsBusy) { }
+            }
+            bw.RunWorkerAsync(path);
+        }
+
+        void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string) e.Argument));
+            int oneSec = 1204 * 4;
+            byte[] buffer = new byte[oneSec];
+            int current = 0;
+            int ret = 0;
+
+            do
+            {
+                ret = pcm.Read(buffer, 0, oneSec);
+                ns.Write(buffer, 0, oneSec);
+                current += oneSec;
+            } while (ret != -1);
+        }
 
         private void Form1_Load(object sender, EventArgs e) //Set up a few components after the app has loaded
         {
@@ -77,29 +105,20 @@ namespace Pimung
             if(portFound)
                 Console.WriteLine(currentPort.PortName);
 
-            NAudio.Wave.WaveStream pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader("test.mp3"));
-            int oneSec = 88200 * 2;
-            byte[] buffer = new byte[oneSec];
-            int current = 0;
-            int ret = 0;
-
 
             try
             {
-                TcpClient client = new TcpClient("192.168.1.3", 8888);
-                NetworkStream ns = client.GetStream();
-                do
-                {
-                    ret = pcm.Read(buffer, 0, oneSec * 3);
-                    ns.Write(buffer, 0, oneSec);
-                    current += oneSec * 3;
-                } while (ret != -1);
+                TcpClient client = new TcpClient("192.168.1.6", 7777);
+                ns = client.GetStream();
                 
             }
-            catch
+            catch (Exception ex)
             {
                 Console.WriteLine("could not connect to server");
+                MessageBox.Show(ex.Message);
             }
+            bw.DoWork += bw_DoWork;
+            bw.WorkerSupportsCancellation = true;
         }
 
         private void setComPorts()
@@ -332,7 +351,7 @@ namespace Pimung
          {
              if (songGrid.Rows.Count > 0)
              {
-                 if (sender.ToString() == "System.Windows.Forms.DataGridView" && !viaWifi)
+                 if (sender.ToString() == "System.Windows.Forms.DataGridView")
                  {
                      if (songPlayed != -1)
                      {
@@ -349,6 +368,11 @@ namespace Pimung
                              songPlayed = i;
                              MusicToTable[songPlayed].controls.play();
                              MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                             if (viaWifi)
+                             {
+                                 MusicToTable[songPlayed].settings.mute = true;
+                                 play_wireless(SongsPaths[i]);
+                             }
                              break;
                          }
                      }
@@ -360,7 +384,7 @@ namespace Pimung
                      nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
                      isPlaying = true;
                  }
-                 else if (!viaWifi)
+                 else
                  {
                      if (isPlaying)
                      {
@@ -370,6 +394,11 @@ namespace Pimung
                          aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
                          //totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
                          //nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+                         if (viaWifi)
+                         {
+                             MusicToTable[songPlayed].settings.mute = true;
+                             play_wireless(SongsPaths[songPlayed]);
+                         }
                          isPlaying = false;
                      }
                      else if (songPlayed == -1)
@@ -383,6 +412,11 @@ namespace Pimung
                          totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
                          nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
                          nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
+                         if (viaWifi)
+                         {
+                             MusicToTable[songPlayed].settings.mute = true;
+                             play_wireless(SongsPaths[songPlayed]);
+                         }
                          isPlaying = true;
                      }
                      else
@@ -395,6 +429,11 @@ namespace Pimung
                          totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
                          nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
                          nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
+                         if (viaWifi)
+                         {
+                             MusicToTable[songPlayed].settings.mute = true;
+                             play_wireless(SongsPaths[songPlayed]);
+                         }
                          isPlaying = true;
                      }
                  }
