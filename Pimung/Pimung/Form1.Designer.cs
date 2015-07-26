@@ -51,7 +51,6 @@
             this.LeftMenu = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.plannerButton = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.BrowseMusic = new System.Windows.Forms.OpenFileDialog();
             this.songGrid = new System.Windows.Forms.DataGridView();
             this.songName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -59,6 +58,7 @@
             this.songArtist = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songGenre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.listsLayout = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fullOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).BeginInit();
@@ -275,7 +275,6 @@
             this.LeftMenu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LeftMenu.Controls.Add(this.button1);
             this.LeftMenu.Controls.Add(this.plannerButton);
-            this.LeftMenu.Controls.Add(this.panel3);
             this.LeftMenu.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.LeftMenu.Location = new System.Drawing.Point(4, 183);
             this.LeftMenu.Name = "LeftMenu";
@@ -315,13 +314,6 @@
             this.plannerButton.UseMnemonic = false;
             this.plannerButton.UseVisualStyleBackColor = false;
             this.plannerButton.Click += new System.EventHandler(this.plannerButton_Click);
-            // 
-            // panel3
-            // 
-            this.panel3.Location = new System.Drawing.Point(3, 113);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(153, 10);
-            this.panel3.TabIndex = 1;
             // 
             // BrowseMusic
             // 
@@ -412,12 +404,20 @@
             this.songGenre.Name = "songGenre";
             this.songGenre.ReadOnly = true;
             // 
+            // listsLayout
+            // 
+            this.listsLayout.Location = new System.Drawing.Point(166, 186);
+            this.listsLayout.Name = "listsLayout";
+            this.listsLayout.Size = new System.Drawing.Size(786, 381);
+            this.listsLayout.TabIndex = 5;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(984, 562);
+            this.Controls.Add(this.listsLayout);
             this.Controls.Add(this.songGrid);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.LeftMenu);
@@ -455,7 +455,6 @@
         private System.Windows.Forms.FlowLayoutPanel LeftMenu;
         private System.Windows.Forms.Button plannerButton;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.PictureBox ShuffleButton;
         private System.Windows.Forms.PictureBox ReplayButton;
         private System.Windows.Forms.PictureBox StrokeOval;
@@ -473,6 +472,7 @@
         private System.Windows.Forms.PictureBox fullOval;
         private System.Windows.Forms.Label nowPlaying;
         private System.Windows.Forms.Label removeMusicButton;
+        private System.Windows.Forms.FlowLayoutPanel listsLayout;
     }
 }
 

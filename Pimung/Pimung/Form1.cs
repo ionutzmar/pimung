@@ -58,7 +58,8 @@ namespace Pimung
             PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 40, 70 - PlayButton.Height / 2);
             ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 40, 70 - ForwardButton.Height / 2);
             Form1_Resize(sender, e);
-
+            listsLayout.Visible = false;
+            songGrid.Visible = true;
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Enabled = true;
             aTimer.Interval = 200;
@@ -683,11 +684,13 @@ namespace Pimung
          private void button1_Click(object sender, EventArgs e)
          {
              songGrid.Visible = true;
+             listsLayout.Visible = false;
          }
 
          private void plannerButton_Click(object sender, EventArgs e)
          {
              songGrid.Visible = false;
+             listsLayout.Visible = true;
          }
     }
 }
