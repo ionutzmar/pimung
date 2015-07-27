@@ -36,6 +36,7 @@ namespace Pimung
         internal Boolean ChooseIPFormIsOpen = false;
         internal Boolean rmMusicIsOpen = false;
         System.Timers.Timer aTimer = new System.Timers.Timer();
+        System.Timers.Timer portTimer = new System.Timers.Timer();
         Random random = new Random();
         int randomSong;
         SerialPort currentPort;
@@ -785,12 +786,71 @@ namespace Pimung
                  if (portFound)
                  {
                      MessageBox.Show("Connected on " + currentPort.PortName);
-
                      Console.WriteLine(currentPort.PortName);
+                     portTimer.Elapsed += new ElapsedEventHandler(readFromPort);
+                     portTimer.Interval = 500;
+                     portTimer.Enabled = true;
+                     currentPort.Open();
                  }
                  else
+                 {
+                     currentPort.Close();
+                     readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
                      MessageBox.Show("Could not connect to arduino");
+                 }
+             }
+             else
+             {
+                 if(currentPort.IsOpen)
+                 {
+                     currentPort.Close();
+                     readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
+                     portFound = false;
+                 }
              }
          }
+
+        private  void readFromPort(object e, ElapsedEventArgs args)
+        {
+            if (currentPort.IsOpen)
+            {
+                if (currentPort.BytesToRead > 0)
+                {
+                    int btr = currentPort.ReadByte();
+                    if (btr == 1)
+                    {
+                        object sender = new object();
+                        EventArgs evt = new EventArgs();
+                        Console.WriteLine("Play");
+                        if (totalTime.InvokeRequired)
+                            totalTime.Invoke((Action)delegate { playStopMusic(sender, evt); });
+                    }
+                    if (btr == 2)
+                    {
+                        object sender = new object();
+                        EventArgs evt = new EventArgs();
+                        Console.WriteLine("Forward");
+                        if (totalTime.InvokeRequired)
+                            totalTime.Invoke((Action)delegate { ForwardButton_Click(sender, evt); });
+                    }
+                    if (btr == 3)
+                    {
+                        object sender = new object();
+                        EventArgs evt = new EventArgs();
+                        Console.WriteLine("Backward");
+                        if (totalTime.InvokeRequired)
+                            totalTime.Invoke((Action)delegate { BackwardButton_Click(sender, evt); });
+                    }
+                }
+            }
+            else
+            {
+                readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
+                portFound = false;
+                portTimer.Enabled = false;
+                Console.WriteLine("Stop reading");
+
+            }
+        }
     }
 }

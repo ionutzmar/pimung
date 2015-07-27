@@ -32,7 +32,7 @@ int action;
 boolean turnYellowLedOff = false;
 boolean greenLedIsHigh = false;
 boolean doSomething = false;
-const int quiteKnock = 7;
+const int quiteKnock = 9;
 const int loudKnock = 1000;
 int numberOfKnocks = 0;
 int knockInterval = 600;
@@ -136,11 +136,8 @@ void loop() {
     lcd.print(" ");
     lcd.write(byte(0));
     lcd.print("C");
-    int tr = analogRead(piezo);
-    if (tr > 0)
-        Serial.println(tr);
 
-
+    knocks(analogRead(piezo));
     currentControlState = digitalRead(controlPin);
     currentHoursState = digitalRead(hoursPin);
     currentMinutesState = digitalRead(minutesPin);
@@ -192,7 +189,6 @@ void loop() {
 
     }
     knocks(analogRead(piezo));
-    Serial.println(analogRead(piezo));
 
     if (currentTime - presentKnockTime > knockInterval && numberOfKnocks == 2 && doSomething) {
         //Serial.println("play");
