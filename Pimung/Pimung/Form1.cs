@@ -27,6 +27,9 @@ namespace Pimung
         int panel1OriginalHeight;
         internal List<string> SongsPaths = new List<string>();
         internal List<WMPLib.WindowsMediaPlayer> MusicToTable = new List<WMPLib.WindowsMediaPlayer>();
+        List<int> indices = new List<int>();
+        List<int> reverseIndices = new List<int>();
+        List<string> items = new List<string>();
         int amount, counter = 0; // counts the number of times 'AddMusicInTable' was called. Useful for adding music to table.
         int songPlayed = -1; //index of the last song palyed
         Boolean isPlaying = false;
@@ -46,6 +49,9 @@ namespace Pimung
         BackgroundWorker bwMusic = new BackgroundWorker();
         internal BackgroundWorker bwServer = new BackgroundWorker();
         Boolean connectedToServer = false;
+
+
+        string[] quotesArray = {"Arguing with a fool only proves that there are two...", "The key to success is not through achievement, but through enthusiasm.  Malcolm Forbes", "All you need in this life is ignorance and confidence, and then success is sure.  Mark Twain", "Age is of no importance unless you're a cheese.  Billie Burke", "The best way to cheer yourself up is to try to cheer somebody else up. Mark Twain", "The elevator to success is out of order. You'll have to use the stairs: one step at a time.  Joe Girard", "I always wanted to be somebody, but now I realize I should have been more specific.  Lily Tomlin", "If you think you are too small to be effective, you have never been in the dark with a mosquito.  Betty Reese", "Hope is the dream of a waking man.  Aristotle", "He who knows others is wise. He who knows himself is enlightened.  Lao Tzu", "When you do not know what you are doing and what you are doing is the best  that is inspiration.  Robert Bresson", "It is not the answer that enlightens, but the question.  Eugene Ionesco Decouvertes", "It takes less time to do things right than to explain why you did it wrong.  Henry Wadsworth Longfellow", "Opportunity is missed by most people because it is dressed in overalls and looks like work.  Thomas Eddison", "Great spirits have always encountered violent opposition from mediocre minds.  Albert Einstein", "People say nothing is impossible, but I do nothing every day.  A.A. Milne", "Failure is the condiment that gives success its flavor.  Truman Capote", "People often say that motivation doesn't last. Well, neither does bathing; that's why we recommend it daily.  Zig Ziglar", "Life is like photography. You need the negatives to develop.  Unknown", "It is amazing what you can accomplish if you do not care who gets the credit.  Harry S. Truman", "Seven days without laughter make one weak.  Joel Goodman", "Vision without action is daydream. Action without vision is nightmare.  Japanese proverb", "Good habits are as addictive as bad habits, and a lot more rewarding.", "Sunglasses: allowing you stare at people without getting caught. It's like Facebook in real life.", "No matter how you feel, get up, dress up, show up, and never give up!", "A good laugh and a long sleep are the two best cures for anything.", "Sometimes the wrong choices bring us to the right places.", "Change your thoughts and you change your world." };
         public Form1()
         {
             InitializeComponent();
@@ -56,7 +62,7 @@ namespace Pimung
             if (bwMusic.IsBusy)
             {
                 bwMusic.CancelAsync();
-                while (bwMusic.IsBusy) { }
+                //while (bwMusic.IsBusy) { }
             }
             bwMusic.RunWorkerAsync(path);
         }
@@ -89,7 +95,7 @@ namespace Pimung
         {
             try
             {
-                TcpClient client = new TcpClient((string) e.Argument, 7777);
+                TcpClient client = new TcpClient((string) e.Argument, 7654);
                 ns = client.GetStream();
                 Console.WriteLine("Connected to server");
                 MessageBox.Show("Connected to server!");
@@ -118,22 +124,54 @@ namespace Pimung
             BackwardButton.Location = new Point(40, 70 - BackwardButton.Height / 2);
             PlayButton.Location = new Point(BackwardButton.Location.X + BackwardButton.Width + 40, 70 - PlayButton.Height / 2);
             ForwardButton.Location = new Point(PlayButton.Location.X + PlayButton.Width + 40, 70 - ForwardButton.Height / 2);
-            Form1_Resize(sender, e);
+            mainPurpose.Width = WhatDoToday.Width - 80;
+            yourDP.Location = new Point(0, 10);
+            addItemBox.Location = new Point(40, yourDP.Location.Y + yourDP.Height + 25);
+            addItemButton.Location = new Point(addItemBox.Location.X + addItemBox.Width + 4, addItemBox.Location.Y);
+            todoList.Location = new Point(addItemBox.Location.X, addItemBox.Location.Y + addItemBox.Height + 5);
+            todoList.Width = addItemButton.Location.X + addItemButton.Width - addItemBox.Location.X;
+            todoList.Height = this.Height - panel2.Height - panel2.Location.Y - 60 - todoList.Location.Y - deleteItems.Height;
+            deleteItems.Width = addItemBox.Width + addItemButton.Width + 4;
+            deleteItems.Location = new Point(addItemBox.Location.X, todoList.Location.Y + todoList.Height + 4);
             listsLayout.Visible = false;
-            songGrid.Visible = true;
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Enabled = true;
             aTimer.Interval = 200;
             //aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             aTimer.Start();
 
+            if(Pimung.Properties.Settings.Default.itemsSaved != null)
+            {
+                items = Pimung.Properties.Settings.Default.itemsSaved;
+                for(int i = 0; i < Pimung.Properties.Settings.Default.itemsSaved.Count; i++)
+                {
+                    todoList.Items.Add(Pimung.Properties.Settings.Default.itemsSaved[i]);
+                }
+            }
             if (Pimung.Properties.Settings.Default.paths != null)
             {
                 SongsPaths = Pimung.Properties.Settings.Default.paths;
                 LoadMusicInTable(SongsPaths);
                 Console.WriteLine(SongsPaths);
             }
-
+            if (Pimung.Properties.Settings.Default.date == null || Pimung.Properties.Settings.Default.purpose == null || Pimung.Properties.Settings.Default.date != DateTime.Now.ToShortDateString())
+            {
+                WhatDoToday.Visible = true;
+                today.Visible = false;
+                mainPurpose.Visible = true;
+                mainPurpose.Text = "";
+                purposeAnswer.Visible = false;
+                reType.Visible = false;
+            }
+            else
+            {
+                WhatDoToday.Visible = false;
+                today.Visible = true;
+                mainPurpose.Visible = false;
+                purposeAnswer.Text = Pimung.Properties.Settings.Default.purpose;
+                purposeAnswer.Visible = true;
+                reType.Visible = true;
+            }
             setComPorts();
             if(portFound)
                 Console.WriteLine(currentPort.PortName);
@@ -144,7 +182,7 @@ namespace Pimung
             bwMusic.WorkerSupportsCancellation = true;
             bwServer.DoWork += bwMusic_DoWork;
             bwServer.WorkerSupportsCancellation = true;
-
+            Form1_Resize(sender, e);
 
         }
 
@@ -216,7 +254,8 @@ namespace Pimung
             panel2.Width = this.Width;
 
             
-            WhatDoToday.Location = new Point( this.Width - WhatDoToday.Width - 30, 30);
+            WhatDoToday.Location = new Point(this.Width - WhatDoToday.Width - 30, 40);
+            today.Location = new Point(WhatDoToday.Location.X + (WhatDoToday.Width - today.Width) / 2, WhatDoToday.Location.Y);
             StrokeOval.Location = new Point(this.Width / 2 - (WhatDoToday.Location.X - this.Width / 2), 80);
             StrokeOval.Width = 2 * WhatDoToday.Location.X - this.Width - 30;
             fullOval.Location = new Point(this.Width / 2 - (WhatDoToday.Location.X - this.Width / 2), 80);
@@ -227,17 +266,31 @@ namespace Pimung
             elapsedTime.Location = new Point(StrokeOval.Location.X - elapsedTime.Width / 2, StrokeOval.Location.Y - elapsedTime.Height - 10);
             totalTime.Location = new Point(StrokeOval.Location.X + StrokeOval.Width - totalTime.Width / 2, elapsedTime.Location.Y);
             LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
+            listsLayout.Location = new Point(LeftMenu.Width, LeftMenu.Location.Y);
+            listsLayout.Width = this.Width - LeftMenu.Width;
+            listsLayout.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
             nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
             songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
             songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
             songGrid.Width = this.Width - LeftMenu.Width - 20;
+            todoList.Height = this.Height - panel2.Height - panel2.Location.Y - 60 - todoList.Location.Y - deleteItems.Height;
+            deleteItems.Location = new Point(addItemBox.Location.X, todoList.Location.Y + todoList.Height + 4);
             ReplayButton.Location = new Point(StrokeOval.Location.X, StrokeOval.Location.Y + StrokeOval.Height + 20);
             ShuffleButton.Location = new Point(StrokeOval.Location.X + StrokeOval.Width - ShuffleButton.Width, StrokeOval.Location.Y + StrokeOval.Height + 20);
+            mainPurpose.Location = new Point(WhatDoToday.Location.X + 40, WhatDoToday.Location.Y + 2 * WhatDoToday.Height - mainPurpose.Height);
+            purposeAnswer.Location = new Point(WhatDoToday.Location.X + (WhatDoToday.Width - purposeAnswer.Width) / 2, mainPurpose.Location.Y);
+            reType.Location = new Point(purposeAnswer.Location.X + purposeAnswer.Width + 5, purposeAnswer.Location.Y + purposeAnswer.Height / 2);
+            needMot.Location = new Point(( listsLayout.Width - addItemButton.Location.X - addItemButton.Width - needMot.Width) / 2 + addItemButton.Location.X + addItemButton.Width, 100);
+            pressMe.Location = new Point((listsLayout.Width - addItemButton.Location.X - addItemButton.Width - pressMe.Width) / 2 + addItemButton.Location.X + addItemButton.Width, needMot.Location.Y + needMot.Height + 20);
+            quoteContainer.Location = new Point(addItemButton.Location.X + addItemButton.Width + 50, pressMe.Location.Y + 60);
+            quoteContainer.Width = listsLayout.Width - quoteContainer.Location.X - 10;
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 38, 126, 200), 1), WhatDoToday.Location.X + 40, WhatDoToday.Location.Y + Convert.ToInt32(2.5 * WhatDoToday.Height), WhatDoToday.Location.X + WhatDoToday.Width - 40, WhatDoToday.Location.Y + Convert.ToInt32(2.5 * WhatDoToday.Height));
+            if (reType.Visible == false)
+                e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 38, 126, 200), 1), WhatDoToday.Location.X + 40, WhatDoToday.Location.Y + 2 * WhatDoToday.Height, WhatDoToday.Location.X + WhatDoToday.Width - 40, WhatDoToday.Location.Y + 2 * WhatDoToday.Height);
+            
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e) //Panel2 contains the line under the play, for/back wardButtons
@@ -268,19 +321,31 @@ namespace Pimung
 
         private void panel2_MouseMove(object sender, MouseEventArgs e)
         {
-            if (startDragging && (MousePosition.Y - this.Top > panel1OriginalHeight + 35))
+            if (startDragging && (MousePosition.Y - this.Top > panel1OriginalHeight + 35) && MousePosition.Y - this.Top <= 305)
             {
                 panel1.Height = MousePosition.Y - this.Top - 35;
                 panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
                 LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
+                listsLayout.Location = new Point(LeftMenu.Width, LeftMenu.Location.Y);
                 songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
                 songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
             }
+            else if (startDragging && MousePosition.Y - this.Top > 305)
+            {
+                panel1.Height = 305 - 35;
+                panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
+                LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
+                listsLayout.Location = new Point(LeftMenu.Width, LeftMenu.Location.Y);
+                songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
+                songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
+            }
+
             else if(startDragging)
             {
                 panel1.Height = panel1OriginalHeight;
                 panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
                 LeftMenu.Location = new Point(0, panel2.Location.Y + 10);
+                listsLayout.Location = new Point(LeftMenu.Width, LeftMenu.Location.Y);
                 songGrid.Location = new Point(LeftMenu.Width, panel2.Location.Y + panel2.Height);
                 songGrid.Height = this.Height - panel2.Height - panel2.Location.Y - 50;
             }
@@ -763,19 +828,25 @@ namespace Pimung
          private void Form1_FormClosing(object sender, FormClosingEventArgs e)
          {
              Pimung.Properties.Settings.Default.paths = SongsPaths;
+             Pimung.Properties.Settings.Default.itemsSaved = items;
              Pimung.Properties.Settings.Default.Save();
          }
 
-         private void button1_Click(object sender, EventArgs e)
+         private void playerButton_Click(object sender, EventArgs e)
          {
              songGrid.Visible = true;
              listsLayout.Visible = false;
+             plannerButton.BackColor = System.Drawing.Color.WhiteSmoke;
+             playerButton.BackColor = System.Drawing.Color.Gainsboro;
          }
 
          private void plannerButton_Click(object sender, EventArgs e)
          {
              songGrid.Visible = false;
              listsLayout.Visible = true;
+             plannerButton.BackColor = System.Drawing.Color.Gainsboro;
+             playerButton.BackColor = System.Drawing.Color.WhiteSmoke;
+
          }
 
          private void readFromArduino_CheckedChanged(object sender, EventArgs e)
@@ -851,6 +922,96 @@ namespace Pimung
                 Console.WriteLine("Stop reading");
 
             }
+        }
+
+        private void mainPurpose_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Console.WriteLine("Enter");
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                purposeAnswer.Visible = true;
+                mainPurpose.Visible = false;
+                reType.Visible = true;
+                WhatDoToday.Visible = false;
+                today.Visible = true;
+                purposeAnswer.Text = mainPurpose.Text + "!";
+                purposeAnswer.Location = new Point(WhatDoToday.Location.X + (WhatDoToday.Width - purposeAnswer.Width) / 2, mainPurpose.Location.Y);
+                reType.Location = new Point(purposeAnswer.Location.X + purposeAnswer.Width + 5, purposeAnswer.Location.Y + purposeAnswer.Height / 2);
+                Pimung.Properties.Settings.Default.purpose = purposeAnswer.Text;
+                Pimung.Properties.Settings.Default.date = DateTime.Now.ToShortDateString();
+                Pimung.Properties.Settings.Default.Save();
+                panel1.Refresh();
+                
+
+            }
+        }
+
+        private void reType_Click(object sender, EventArgs e)
+        {
+            Pimung.Properties.Settings.Default.date = "28.02.1989";
+            Pimung.Properties.Settings.Default.Save();
+            reType.Visible = false;
+            mainPurpose.Visible = true;
+            mainPurpose.Text = "";
+            purposeAnswer.Visible = false;
+            WhatDoToday.Visible = true;
+            today.Visible = false;
+            panel1.Refresh();
+        }
+
+        private void addItemButton_Click(object sender, EventArgs e)
+        {
+            items.Add(addItemBox.Text);
+            todoList.Items.Add(addItemBox.Text);
+            addItemBox.Text = "";
+        }
+
+        private void addItemBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                object obj = new Object();
+                EventArgs evt = new EventArgs();
+                addItemButton_Click(obj, evt);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void deleteItems_Click(object sender, EventArgs e)
+        {
+            indices.Clear();
+            reverseIndices.Clear();
+            foreach (int indexChecked in todoList.CheckedIndices)
+            {
+                indices.Add(indexChecked);
+                Console.WriteLine("index checked: " + indexChecked);
+            }
+
+            descendingOrdering(indices);
+            foreach (int indexChecked in reverseIndices)
+            {
+                todoList.Items.RemoveAt(indexChecked);
+                items.RemoveAt(indexChecked);
+            }
+        }
+
+        private void descendingOrdering(List<int> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                reverseIndices.Add(list[list.Count - i - 1]);
+            }
+        }
+        List<string> quotesList = new List<string>();
+        private void pressMe_Click(object sender, EventArgs e)
+        {
+
+
+            actualQuote.Text = quotesArray[random.Next(0, quotesArray.Length)];
+
         }
     }
 }

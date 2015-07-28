@@ -28,14 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.mainPurpose = new System.Windows.Forms.TextBox();
             this.removeMusicButton = new System.Windows.Forms.Label();
             this.nowPlaying = new System.Windows.Forms.Label();
             this.elapsedTime = new System.Windows.Forms.Label();
             this.totalTime = new System.Windows.Forms.Label();
+            this.readFromArduino = new System.Windows.Forms.CheckBox();
             this.checkWifi = new System.Windows.Forms.CheckBox();
             this.AddMusicBotton = new System.Windows.Forms.Label();
             this.fullOval = new System.Windows.Forms.PictureBox();
@@ -48,7 +50,7 @@
             this.PlayButton = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.LeftMenu = new System.Windows.Forms.FlowLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.playerButton = new System.Windows.Forms.Button();
             this.plannerButton = new System.Windows.Forms.Button();
             this.BrowseMusic = new System.Windows.Forms.OpenFileDialog();
             this.songGrid = new System.Windows.Forms.DataGridView();
@@ -57,8 +59,19 @@
             this.songArtist = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.songGenre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.listsLayout = new System.Windows.Forms.FlowLayoutPanel();
-            this.readFromArduino = new System.Windows.Forms.CheckBox();
+            this.purposeAnswer = new System.Windows.Forms.Label();
+            this.reType = new System.Windows.Forms.Label();
+            this.today = new System.Windows.Forms.Label();
+            this.yourDP = new System.Windows.Forms.Label();
+            this.listsLayout = new System.Windows.Forms.Panel();
+            this.addItemBox = new System.Windows.Forms.TextBox();
+            this.addItemButton = new System.Windows.Forms.Button();
+            this.todoList = new System.Windows.Forms.CheckedListBox();
+            this.deleteItems = new System.Windows.Forms.Button();
+            this.needMot = new System.Windows.Forms.Label();
+            this.pressMe = new System.Windows.Forms.Button();
+            this.quoteContainer = new System.Windows.Forms.FlowLayoutPanel();
+            this.actualQuote = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fullOval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StrokeOval)).BeginInit();
@@ -69,6 +82,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).BeginInit();
             this.LeftMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.songGrid)).BeginInit();
+            this.listsLayout.SuspendLayout();
+            this.quoteContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -76,6 +91,10 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.today);
+            this.panel1.Controls.Add(this.reType);
+            this.panel1.Controls.Add(this.purposeAnswer);
+            this.panel1.Controls.Add(this.mainPurpose);
             this.panel1.Controls.Add(this.removeMusicButton);
             this.panel1.Controls.Add(this.nowPlaying);
             this.panel1.Controls.Add(this.elapsedTime);
@@ -91,11 +110,26 @@
             this.panel1.Controls.Add(this.BackwardButton);
             this.panel1.Controls.Add(this.ForwardButton);
             this.panel1.Controls.Add(this.PlayButton);
+            this.panel1.Cursor = System.Windows.Forms.Cursors.Default;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(980, 145);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // mainPurpose
+            // 
+            this.mainPurpose.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.mainPurpose.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.mainPurpose.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.mainPurpose.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.mainPurpose.Location = new System.Drawing.Point(779, 66);
+            this.mainPurpose.MaxLength = 23;
+            this.mainPurpose.Name = "mainPurpose";
+            this.mainPurpose.Size = new System.Drawing.Size(115, 30);
+            this.mainPurpose.TabIndex = 11;
+            this.mainPurpose.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.mainPurpose.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainPurpose_KeyDown);
             // 
             // removeMusicButton
             // 
@@ -142,6 +176,19 @@
             this.totalTime.TabIndex = 8;
             this.totalTime.Text = "00:00";
             // 
+            // readFromArduino
+            // 
+            this.readFromArduino.AutoSize = true;
+            this.readFromArduino.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.readFromArduino.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.readFromArduino.Location = new System.Drawing.Point(496, 83);
+            this.readFromArduino.Name = "readFromArduino";
+            this.readFromArduino.Size = new System.Drawing.Size(152, 30);
+            this.readFromArduino.TabIndex = 7;
+            this.readFromArduino.Text = "Enable knocks";
+            this.readFromArduino.UseVisualStyleBackColor = true;
+            this.readFromArduino.CheckedChanged += new System.EventHandler(this.readFromArduino_CheckedChanged);
+            // 
             // checkWifi
             // 
             this.checkWifi.AutoSize = true;
@@ -172,7 +219,7 @@
             // 
             this.fullOval.BackgroundImage = global::Pimung.Properties.Resources.FullOval;
             this.fullOval.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.fullOval.Location = new System.Drawing.Point(342, 12);
+            this.fullOval.Location = new System.Drawing.Point(411, 110);
             this.fullOval.Name = "fullOval";
             this.fullOval.Size = new System.Drawing.Size(371, 19);
             this.fullOval.TabIndex = 5;
@@ -274,7 +321,7 @@
             // LeftMenu
             // 
             this.LeftMenu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LeftMenu.Controls.Add(this.button1);
+            this.LeftMenu.Controls.Add(this.playerButton);
             this.LeftMenu.Controls.Add(this.plannerButton);
             this.LeftMenu.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.LeftMenu.Location = new System.Drawing.Point(4, 183);
@@ -282,22 +329,22 @@
             this.LeftMenu.Size = new System.Drawing.Size(156, 396);
             this.LeftMenu.TabIndex = 3;
             // 
-            // button1
+            // playerButton
             // 
-            this.button1.BackColor = System.Drawing.Color.Gainsboro;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.button1.Location = new System.Drawing.Point(3, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(153, 49);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Player";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.UseMnemonic = false;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.playerButton.BackColor = System.Drawing.Color.Gainsboro;
+            this.playerButton.FlatAppearance.BorderSize = 0;
+            this.playerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.playerButton.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerButton.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.playerButton.Location = new System.Drawing.Point(3, 3);
+            this.playerButton.Name = "playerButton";
+            this.playerButton.Size = new System.Drawing.Size(153, 49);
+            this.playerButton.TabIndex = 0;
+            this.playerButton.Text = "Player";
+            this.playerButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.playerButton.UseMnemonic = false;
+            this.playerButton.UseVisualStyleBackColor = false;
+            this.playerButton.Click += new System.EventHandler(this.playerButton_Click);
             // 
             // plannerButton
             // 
@@ -328,27 +375,27 @@
             this.songGrid.AllowUserToDeleteRows = false;
             this.songGrid.AllowUserToOrderColumns = true;
             this.songGrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.songGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.songGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.songGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.songGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             this.songGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.songGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleVertical;
             this.songGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.songGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.songGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.songGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.songGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.songName,
@@ -356,14 +403,14 @@
             this.songArtist,
             this.songAlbum,
             this.songGenre});
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.songGrid.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.songGrid.DefaultCellStyle = dataGridViewCellStyle3;
             this.songGrid.EnableHeadersVisualStyles = false;
             this.songGrid.GridColor = System.Drawing.Color.Gainsboro;
             this.songGrid.Location = new System.Drawing.Point(166, 186);
@@ -405,25 +452,157 @@
             this.songGenre.Name = "songGenre";
             this.songGenre.ReadOnly = true;
             // 
+            // purposeAnswer
+            // 
+            this.purposeAnswer.AutoSize = true;
+            this.purposeAnswer.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.purposeAnswer.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.purposeAnswer.Location = new System.Drawing.Point(849, 37);
+            this.purposeAnswer.Name = "purposeAnswer";
+            this.purposeAnswer.Size = new System.Drawing.Size(74, 29);
+            this.purposeAnswer.TabIndex = 12;
+            this.purposeAnswer.Text = "label1";
+            // 
+            // reType
+            // 
+            this.reType.AutoSize = true;
+            this.reType.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.reType.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.reType.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.reType.Location = new System.Drawing.Point(940, 66);
+            this.reType.Name = "reType";
+            this.reType.Size = new System.Drawing.Size(12, 13);
+            this.reType.TabIndex = 13;
+            this.reType.Text = "x";
+            this.reType.Click += new System.EventHandler(this.reType_Click);
+            // 
+            // today
+            // 
+            this.today.AutoSize = true;
+            this.today.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.today.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.today.Location = new System.Drawing.Point(817, 20);
+            this.today.Name = "today";
+            this.today.Size = new System.Drawing.Size(83, 33);
+            this.today.TabIndex = 14;
+            this.today.Text = "Today,";
+            // 
+            // yourDP
+            // 
+            this.yourDP.AutoSize = true;
+            this.yourDP.Font = new System.Drawing.Font("Calibri", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.yourDP.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.yourDP.Location = new System.Drawing.Point(15, 1);
+            this.yourDP.Name = "yourDP";
+            this.yourDP.Size = new System.Drawing.Size(269, 36);
+            this.yourDP.TabIndex = 0;
+            this.yourDP.Text = "      Your daily planner";
+            // 
             // listsLayout
             // 
-            this.listsLayout.Location = new System.Drawing.Point(166, 186);
+            this.listsLayout.Controls.Add(this.quoteContainer);
+            this.listsLayout.Controls.Add(this.needMot);
+            this.listsLayout.Controls.Add(this.deleteItems);
+            this.listsLayout.Controls.Add(this.todoList);
+            this.listsLayout.Controls.Add(this.pressMe);
+            this.listsLayout.Controls.Add(this.addItemButton);
+            this.listsLayout.Controls.Add(this.addItemBox);
+            this.listsLayout.Controls.Add(this.yourDP);
+            this.listsLayout.Location = new System.Drawing.Point(173, 191);
             this.listsLayout.Name = "listsLayout";
-            this.listsLayout.Size = new System.Drawing.Size(786, 381);
+            this.listsLayout.Size = new System.Drawing.Size(799, 408);
             this.listsLayout.TabIndex = 5;
             // 
-            // readFromArduino
+            // addItemBox
             // 
-            this.readFromArduino.AutoSize = true;
-            this.readFromArduino.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.readFromArduino.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.readFromArduino.Location = new System.Drawing.Point(496, 83);
-            this.readFromArduino.Name = "readFromArduino";
-            this.readFromArduino.Size = new System.Drawing.Size(152, 30);
-            this.readFromArduino.TabIndex = 7;
-            this.readFromArduino.Text = "Enable knocks";
-            this.readFromArduino.UseVisualStyleBackColor = true;
-            this.readFromArduino.CheckedChanged += new System.EventHandler(this.readFromArduino_CheckedChanged);
+            this.addItemBox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.addItemBox.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.addItemBox.Location = new System.Drawing.Point(58, 65);
+            this.addItemBox.Name = "addItemBox";
+            this.addItemBox.Size = new System.Drawing.Size(238, 27);
+            this.addItemBox.TabIndex = 1;
+            this.addItemBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addItemBox_KeyDown);
+            // 
+            // addItemButton
+            // 
+            this.addItemButton.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.addItemButton.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.addItemButton.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.addItemButton.Location = new System.Drawing.Point(302, 65);
+            this.addItemButton.Name = "addItemButton";
+            this.addItemButton.Size = new System.Drawing.Size(77, 27);
+            this.addItemButton.TabIndex = 2;
+            this.addItemButton.Text = "Add item";
+            this.addItemButton.UseVisualStyleBackColor = false;
+            this.addItemButton.Click += new System.EventHandler(this.addItemButton_Click);
+            // 
+            // todoList
+            // 
+            this.todoList.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.todoList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.todoList.CheckOnClick = true;
+            this.todoList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.todoList.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.todoList.FormattingEnabled = true;
+            this.todoList.HorizontalScrollbar = true;
+            this.todoList.Location = new System.Drawing.Point(58, 103);
+            this.todoList.Name = "todoList";
+            this.todoList.Size = new System.Drawing.Size(320, 168);
+            this.todoList.TabIndex = 3;
+            // 
+            // deleteItems
+            // 
+            this.deleteItems.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.deleteItems.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.deleteItems.Location = new System.Drawing.Point(58, 298);
+            this.deleteItems.Name = "deleteItems";
+            this.deleteItems.Size = new System.Drawing.Size(320, 37);
+            this.deleteItems.TabIndex = 4;
+            this.deleteItems.Text = "Delete checked items";
+            this.deleteItems.UseVisualStyleBackColor = false;
+            this.deleteItems.Click += new System.EventHandler(this.deleteItems_Click);
+            // 
+            // needMot
+            // 
+            this.needMot.AutoSize = true;
+            this.needMot.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.needMot.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.needMot.Location = new System.Drawing.Point(520, 50);
+            this.needMot.Name = "needMot";
+            this.needMot.Size = new System.Drawing.Size(276, 33);
+            this.needMot.TabIndex = 5;
+            this.needMot.Text = "Need some motivation?";
+            // 
+            // pressMe
+            // 
+            this.pressMe.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.pressMe.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.pressMe.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.pressMe.Location = new System.Drawing.Point(594, 103);
+            this.pressMe.Name = "pressMe";
+            this.pressMe.Size = new System.Drawing.Size(101, 27);
+            this.pressMe.TabIndex = 2;
+            this.pressMe.Text = "Press me!!";
+            this.pressMe.UseVisualStyleBackColor = false;
+            this.pressMe.Click += new System.EventHandler(this.pressMe_Click);
+            // 
+            // quoteContainer
+            // 
+            this.quoteContainer.Controls.Add(this.actualQuote);
+            this.quoteContainer.Location = new System.Drawing.Point(481, 238);
+            this.quoteContainer.Name = "quoteContainer";
+            this.quoteContainer.Size = new System.Drawing.Size(298, 586);
+            this.quoteContainer.TabIndex = 6;
+            // 
+            // actualQuote
+            // 
+            this.actualQuote.AutoSize = true;
+            this.actualQuote.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.actualQuote.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.actualQuote.Location = new System.Drawing.Point(3, 0);
+            this.actualQuote.Name = "actualQuote";
+            this.actualQuote.Size = new System.Drawing.Size(0, 29);
+            this.actualQuote.TabIndex = 0;
             // 
             // Form1
             // 
@@ -453,6 +632,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).EndInit();
             this.LeftMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.songGrid)).EndInit();
+            this.listsLayout.ResumeLayout(false);
+            this.listsLayout.PerformLayout();
+            this.quoteContainer.ResumeLayout(false);
+            this.quoteContainer.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -467,7 +650,7 @@
         private System.Windows.Forms.Label WhatDoToday;
         private System.Windows.Forms.FlowLayoutPanel LeftMenu;
         private System.Windows.Forms.Button plannerButton;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button playerButton;
         private System.Windows.Forms.PictureBox ShuffleButton;
         private System.Windows.Forms.PictureBox ReplayButton;
         private System.Windows.Forms.PictureBox StrokeOval;
@@ -485,8 +668,21 @@
         private System.Windows.Forms.PictureBox fullOval;
         private System.Windows.Forms.Label nowPlaying;
         private System.Windows.Forms.Label removeMusicButton;
-        private System.Windows.Forms.FlowLayoutPanel listsLayout;
         internal System.Windows.Forms.CheckBox readFromArduino;
+        private System.Windows.Forms.TextBox mainPurpose;
+        private System.Windows.Forms.Label purposeAnswer;
+        private System.Windows.Forms.Label reType;
+        private System.Windows.Forms.Label today;
+        private System.Windows.Forms.Label yourDP;
+        private System.Windows.Forms.Panel listsLayout;
+        private System.Windows.Forms.Button addItemButton;
+        private System.Windows.Forms.TextBox addItemBox;
+        private System.Windows.Forms.CheckedListBox todoList;
+        private System.Windows.Forms.Button deleteItems;
+        private System.Windows.Forms.Label needMot;
+        private System.Windows.Forms.Button pressMe;
+        private System.Windows.Forms.FlowLayoutPanel quoteContainer;
+        private System.Windows.Forms.Label actualQuote;
     }
 }
 

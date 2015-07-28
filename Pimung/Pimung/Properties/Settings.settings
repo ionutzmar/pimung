@@ -5,7 +5,13 @@
     <Setting Name="paths" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="proba" Type="System.String" Scope="User">
+    <Setting Name="itemsSaved" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="purpose" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="date" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

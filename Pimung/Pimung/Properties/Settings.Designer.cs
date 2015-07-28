@@ -36,13 +36,36 @@ namespace Pimung.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string proba {
+        public global::System.Collections.Generic.List<System.String> itemsSaved {
             get {
-                return ((string)(this["proba"]));
+                return ((global::System.Collections.Generic.List<System.String>)(this["itemsSaved"]));
             }
             set {
-                this["proba"] = value;
+                this["itemsSaved"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string purpose {
+            get {
+                return ((string)(this["purpose"]));
+            }
+            set {
+                this["purpose"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string date {
+            get {
+                return ((string)(this["date"]));
+            }
+            set {
+                this["date"] = value;
             }
         }
     }
