@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RemoveMusicDialog));
             this.checkListBox = new System.Windows.Forms.CheckedListBox();
             this.whichMusic = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -89,6 +90,7 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.whichMusic);
             this.Controls.Add(this.checkListBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(500, 500);
             this.Name = "RemoveMusicDialog";
             this.Text = "RemoveMusic";

@@ -2,7 +2,7 @@
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-const int tempPin = A4;
+const int tempPin = A0;
 const int controlPin = 6;
 const int hoursPin = 7;
 const int minutesPin = 8;

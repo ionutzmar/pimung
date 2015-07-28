@@ -4,7 +4,11 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <alsa/asoundlib.h>
-#include <WiringPi.h>
+#include <wiringPi.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
 
 #define PCM_DEVICE "default"
 
@@ -249,7 +253,7 @@ void init_leds()
 	for (i = 0; i < 5; i++) {
 		pinMode(rows[i], OUTPUT);
 	}
-	for (i = 0 : i < 12; i++) {
+	for (i = 0; i < 12; i++) {
 		pinMode(cols[i], OUTPUT);
 	}
 }
@@ -257,15 +261,23 @@ void init_leds()
 void set_leds(int row, int col)
 {
 	int i;
-	digitalWrite(col, HIGH);
+	digitalWrite(cols[col], HIGH);
 	for (i = 0; i < row; i++) {
 		digitalWrite(rows[i], HIGH);
 	}
-	delay(5);
-	for (i = 0; i < row; i++) {
+}
+
+void clear_leds()
+{
+	int i;
+	for(i = 0; i < 5; i++)
+	{
 		digitalWrite(rows[i], LOW);
 	}
-	digitalWrite(col, LOW);
+	for(i = 0; i < 12; i++)
+	{
+		digitalWrite(cols[i], LOW);
+	}
 }
 
 int rate = 44100;
@@ -282,10 +294,20 @@ int main(int argc, const char* argv[])
 	int len = sizeof(client_addr);
 	int received;
 
-	serv_addr.sin_port = htons(7567);
+	serv_addr.sin_port = htons(7654);
 	serv_addr.sin_family = AF_INET;
 
-	inet_pton(AF_INET, "192.168.1.11", &serv_addr.sin_addr.s_addr);
+	int s;
+	struct ifreq ifr = {};
+
+	s = socket(PF_INET, SOCK_DGRAM, 0);
+
+	strncpy(ifr.ifr_name, "eth0", sizeof(ifr.ifr_name));
+
+	if (ioctl(s, SIOCGIFADDR, &ifr) >= 0)
+		inet_pton(AF_INET, inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr), &serv_addr.sin_addr.s_addr);
+	else
+		inet_pton(AF_INET, "192.168.1.9", &serv_addr.sin_addr.s_addr);
 
 	/* SERVER DE MUZICA */
 
@@ -404,7 +426,7 @@ int main(int argc, const char* argv[])
 
 		if (received > 0) {
 			// if (received == frames / 4)
-			printf("Received: %d\n", received);
+			//printf("Received: %d\n", received);
 			if ((err = snd_pcm_writei (playback_handle, buffer, frames)) <= 0) {
 				fprintf (stderr, "write to audio interface failed (%s)\n", snd_strerror (err));
 			}
@@ -434,12 +456,12 @@ int main(int argc, const char* argv[])
 			for (i = 0; i < 12; i++) {
 				levels[i] /= max;
 				levels[i] *= 5;
-
+				
 				int lvl = (int) levels[i]; /*NOT FUCKING WORKING */
-
-				set_leds(4, 4); // row, col
+				clear_leds();
+				set_leds(lvl, i); // row, col
 				//
-				printf("%f\n", levels[i]);
+				printf("Column: %d, Level: %d\n", i, lvl);
 			}
 		}
 	}
@@ -447,6 +469,8 @@ int main(int argc, const char* argv[])
 	snd_pcm_close (playback_handle);
 	return 0;
 }
+
+
 
 
 // to copy to raspberry: scp [-r] path/to/file user@host:path/to/remote/folder

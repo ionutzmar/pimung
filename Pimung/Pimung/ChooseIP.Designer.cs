@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChooseIP));
             this.textIP = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -85,6 +86,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.textIP);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ChooseIP";
             this.Text = "ChooseIP";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChooseIP_FormClosing);

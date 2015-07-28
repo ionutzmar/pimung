@@ -182,8 +182,8 @@ namespace Pimung
             bwMusic.WorkerSupportsCancellation = true;
             bwServer.DoWork += bwMusic_DoWork;
             bwServer.WorkerSupportsCancellation = true;
-            Form1_Resize(sender, e);
 
+            Form1_Resize(sender, e);
         }
 
         private void setComPorts()
