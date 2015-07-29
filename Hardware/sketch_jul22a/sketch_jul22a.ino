@@ -35,7 +35,7 @@ boolean doSomething = false;
 const int quiteKnock = 9;
 const int loudKnock = 1000;
 int numberOfKnocks = 0;
-int knockInterval = 600;
+int knockInterval = 800;
 
 byte inputByte_0;
 
@@ -239,6 +239,6 @@ void knocks(int value) {
             //Serial.println(numberOfKnocks);
         } else
             numberOfKnocks = 1;
-        delay(50);
+        delay(100);
     }
 }

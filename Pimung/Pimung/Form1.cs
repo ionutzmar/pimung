@@ -827,6 +827,14 @@ namespace Pimung
 
          private void Form1_FormClosing(object sender, FormClosingEventArgs e)
          {
+             if (portFound)
+             {
+                 try
+                 {
+                     currentPort.Close();
+                 }
+                 catch { }
+             }
              Pimung.Properties.Settings.Default.paths = SongsPaths;
              Pimung.Properties.Settings.Default.itemsSaved = items;
              Pimung.Properties.Settings.Default.Save();
@@ -865,7 +873,11 @@ namespace Pimung
                  }
                  else
                  {
-                     currentPort.Close();
+                     try
+                     {
+                         currentPort.Close();
+                     }
+                     catch { }
                      readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
                      MessageBox.Show("Could not connect to arduino");
                  }
@@ -874,7 +886,11 @@ namespace Pimung
              {
                  if(currentPort.IsOpen)
                  {
-                     currentPort.Close();
+                     try
+                     {
+                         currentPort.Close();
+                     }
+                     catch { }
                      readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
                      portFound = false;
                  }
