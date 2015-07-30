@@ -91,7 +91,7 @@ namespace Pimung
                     pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
                 else
                     pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.WaveFileReader((string)e.Argument));
-                int oneSec = 1204 * 4;
+                int oneSec = 1204 * 4;  //1204 samples * 2 channels * 2 bytes each
                 byte[] buffer = new byte[oneSec];
                 int ret = 0;
                 
