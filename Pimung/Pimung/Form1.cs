@@ -51,6 +51,7 @@ namespace Pimung
         internal BackgroundWorker bwServer = new BackgroundWorker();
         internal Boolean connectedToServer = false;
         TcpClient client;
+        string lastIp = "";
 
         string[] quotesArray = {"Arguing with a fool only proves that there are two...", "The key to success is not through achievement, but through enthusiasm.  Malcolm Forbes", "All you need in this life is ignorance and confidence, and then success is sure.  Mark Twain", "Age is of no importance unless you're a cheese.  Billie Burke", "The best way to cheer yourself up is to try to cheer somebody else up. Mark Twain", "The elevator to success is out of order. You'll have to use the stairs: one step at a time.  Joe Girard", "I always wanted to be somebody, but now I realize I should have been more specific.  Lily Tomlin", "If you think you are too small to be effective, you have never been in the dark with a mosquito.  Betty Reese", "Hope is the dream of a waking man.  Aristotle", "He who knows others is wise. He who knows himself is enlightened.  Lao Tzu", "When you do not know what you are doing and what you are doing is the best  that is inspiration.  Robert Bresson", "It is not the answer that enlightens, but the question.  Eugene Ionesco Decouvertes", "It takes less time to do things right than to explain why you did it wrong.  Henry Wadsworth Longfellow", "Opportunity is missed by most people because it is dressed in overalls and looks like work.  Thomas Eddison", "Great spirits have always encountered violent opposition from mediocre minds.  Albert Einstein", "People say nothing is impossible, but I do nothing every day.  A.A. Milne", "Failure is the condiment that gives success its flavor.  Truman Capote", "People often say that motivation doesn't last. Well, neither does bathing; that's why we recommend it daily.  Zig Ziglar", "Life is like photography. You need the negatives to develop.  Unknown", "It is amazing what you can accomplish if you do not care who gets the credit.  Harry S. Truman", "Seven days without laughter make one weak.  Joel Goodman", "Vision without action is daydream. Action without vision is nightmare.  Japanese proverb", "Good habits are as addictive as bad habits, and a lot more rewarding.", "Sunglasses: allowing you stare at people without getting caught. It's like Facebook in real life.", "No matter how you feel, get up, dress up, show up, and never give up!", "A good laugh and a long sleep are the two best cures for anything.", "Sometimes the wrong choices bring us to the right places.", "Change your thoughts and you change your world." };
         public Form1()
@@ -103,8 +104,10 @@ namespace Pimung
                         Console.WriteLine("Has returned");
                         return;
                     }
-                    ret = pcm.Read(buffer, 0, oneSec);
-                    ns.Write(buffer, 0, oneSec);
+                    if (pcm != null)
+                        ret = pcm.Read(buffer, 0, oneSec);
+                    if (ns !=null)
+                     ns.Write(buffer, 0, oneSec);
                 } while (ret != -1);
                 pcm.Dispose();
                 
@@ -112,7 +115,7 @@ namespace Pimung
             }
             catch
             {
-                MessageBox.Show("Something went wrong");
+                MessageBox.Show("Something went wrong with the server");
                 connectedToServer = false;
             }
         }
@@ -156,9 +159,19 @@ namespace Pimung
         {
             try
             {
-                client = new TcpClient((string) e.Argument, 7654);
-                ns = client.GetStream();
-                Console.WriteLine("Connected to server");
+                Console.WriteLine(lastIp != (string)e.Argument);
+                Console.WriteLine(lastIp);
+                Console.WriteLine((string)e.Argument);
+                if (lastIp != (string)e.Argument)
+                {
+                    lastIp = (string)e.Argument;
+                    client = new TcpClient(lastIp, 7654);
+                    ns = client.GetStream();
+
+                    Console.WriteLine(client.Client.LocalEndPoint.ToString());
+                    Console.WriteLine("o intrat");
+                }
+
                 MessageBox.Show("Connected to server!");
                 connectedToServer = true;
 
