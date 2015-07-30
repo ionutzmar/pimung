@@ -47,9 +47,10 @@ namespace Pimung
         NetworkStream ns = null;
         NAudio.Wave.WaveStream pcm = null;
         BackgroundWorker bwMusic = new BackgroundWorker();
+        BackgroundWorker bwMusic2 = new BackgroundWorker();
         internal BackgroundWorker bwServer = new BackgroundWorker();
-        Boolean connectedToServer = false;
-
+        internal Boolean connectedToServer = false;
+        TcpClient client;
 
         string[] quotesArray = {"Arguing with a fool only proves that there are two...", "The key to success is not through achievement, but through enthusiasm.  Malcolm Forbes", "All you need in this life is ignorance and confidence, and then success is sure.  Mark Twain", "Age is of no importance unless you're a cheese.  Billie Burke", "The best way to cheer yourself up is to try to cheer somebody else up. Mark Twain", "The elevator to success is out of order. You'll have to use the stairs: one step at a time.  Joe Girard", "I always wanted to be somebody, but now I realize I should have been more specific.  Lily Tomlin", "If you think you are too small to be effective, you have never been in the dark with a mosquito.  Betty Reese", "Hope is the dream of a waking man.  Aristotle", "He who knows others is wise. He who knows himself is enlightened.  Lao Tzu", "When you do not know what you are doing and what you are doing is the best  that is inspiration.  Robert Bresson", "It is not the answer that enlightens, but the question.  Eugene Ionesco Decouvertes", "It takes less time to do things right than to explain why you did it wrong.  Henry Wadsworth Longfellow", "Opportunity is missed by most people because it is dressed in overalls and looks like work.  Thomas Eddison", "Great spirits have always encountered violent opposition from mediocre minds.  Albert Einstein", "People say nothing is impossible, but I do nothing every day.  A.A. Milne", "Failure is the condiment that gives success its flavor.  Truman Capote", "People often say that motivation doesn't last. Well, neither does bathing; that's why we recommend it daily.  Zig Ziglar", "Life is like photography. You need the negatives to develop.  Unknown", "It is amazing what you can accomplish if you do not care who gets the credit.  Harry S. Truman", "Seven days without laughter make one weak.  Joel Goodman", "Vision without action is daydream. Action without vision is nightmare.  Japanese proverb", "Good habits are as addictive as bad habits, and a lot more rewarding.", "Sunglasses: allowing you stare at people without getting caught. It's like Facebook in real life.", "No matter how you feel, get up, dress up, show up, and never give up!", "A good laugh and a long sleep are the two best cures for anything.", "Sometimes the wrong choices bring us to the right places.", "Change your thoughts and you change your world." };
         public Form1()
@@ -62,27 +63,52 @@ namespace Pimung
             if (bwMusic.IsBusy)
             {
                 bwMusic.CancelAsync();
-                //while (bwMusic.IsBusy) { }
+                Console.WriteLine("Cancel async");
+                bwMusic2.RunWorkerAsync(path);
+                //bwMusic.Dispose();
+                // while (bwMusic.IsBusy) { }
             }
-            bwMusic.RunWorkerAsync(path);
+            else
+            {
+                if (bwMusic2.IsBusy)
+                {
+                    bwMusic2.CancelAsync();
+                    Console.WriteLine("O intrat");
+                }
+                bwMusic.RunWorkerAsync(path);
+                return;
+            }
+       
+
         }
 
-        void bw_DoWork(object sender, DoWorkEventArgs e)
+        void bwMusic_DoWork(object sender, DoWorkEventArgs e) //bwMusic
         {
             try
             {
-                pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
+                if (MusicToTable[songPlayed].currentMedia.getItemInfo("FileType") == "mp3")
+                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
+                else
+                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.WaveFileReader((string)e.Argument));
                 int oneSec = 1204 * 4;
                 byte[] buffer = new byte[oneSec];
-                int current = 0;
                 int ret = 0;
-
+                
                 do
                 {
+                    if (bwMusic.CancellationPending)
+                    {
+                        pcm.Dispose();
+                        e.Cancel = true;
+                        Console.WriteLine("Has returned");
+                        return;
+                    }
                     ret = pcm.Read(buffer, 0, oneSec);
                     ns.Write(buffer, 0, oneSec);
-                    current += oneSec;
                 } while (ret != -1);
+                pcm.Dispose();
+                
+                
             }
             catch
             {
@@ -91,11 +117,46 @@ namespace Pimung
             }
         }
 
-        void bwMusic_DoWork(object sender, DoWorkEventArgs e)
+        void bwMusic2_DoWork(object sender, DoWorkEventArgs e) //bwMusic2
         {
             try
             {
-                TcpClient client = new TcpClient((string) e.Argument, 7654);
+                if (MusicToTable[songPlayed].currentMedia.getItemInfo("FileType") == "mp3")
+                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
+                else
+                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.WaveFileReader((string)e.Argument));
+                int oneSec = 1204 * 4;
+                byte[] buffer = new byte[oneSec];
+                int ret = 0;
+
+                do
+                {
+                    if (bwMusic2.CancellationPending)
+                    {
+                        pcm.Dispose();
+                        e.Cancel = true;
+                        Console.WriteLine("Has returned");
+                        return;
+                    }
+                    ret = pcm.Read(buffer, 0, oneSec);
+                    ns.Write(buffer, 0, oneSec);
+                } while (ret != -1);
+                pcm.Dispose();
+
+
+            }
+            catch
+            {
+                MessageBox.Show("Something went wrong");
+                connectedToServer = false;
+            }
+        }
+
+        void bwServer_DoWork(object sender, DoWorkEventArgs e)  //bwserver
+        {
+            try
+            {
+                client = new TcpClient((string) e.Argument, 7654);
                 ns = client.GetStream();
                 Console.WriteLine("Connected to server");
                 MessageBox.Show("Connected to server!");
@@ -178,9 +239,11 @@ namespace Pimung
 
 
             
-            bwMusic.DoWork += bw_DoWork;
+            bwMusic.DoWork += bwMusic_DoWork;
             bwMusic.WorkerSupportsCancellation = true;
-            bwServer.DoWork += bwMusic_DoWork;
+            bwMusic2.DoWork += bwMusic2_DoWork;
+            bwMusic2.WorkerSupportsCancellation = true;
+            bwServer.DoWork += bwServer_DoWork;
             bwServer.WorkerSupportsCancellation = true;
 
             Form1_Resize(sender, e);
@@ -375,38 +438,44 @@ namespace Pimung
 
         internal void LoadMusicInTable(List<string> songs)
         {
-            isPlaying = false;
-            PlayButton.BackgroundImage = Pimung.Properties.Resources.playButton2;
-            nowPlaying.Text = "";
-            elapsedTime.Text = "00:00";
-            totalTime.Text = "00:00";
-            fullOval.Width = 0;
-            if (songPlayed != -1)
+            try
             {
-                MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
-                aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
-                MusicToTable[songPlayed].settings.setMode("loop", false);
-                MusicToTable[songPlayed].controls.stop();
-                songPlayed = -1;
-            }
-            MusicToTable.Clear();
-            amount = songs.Count;
+                isPlaying = false;
+                PlayButton.BackgroundImage = Pimung.Properties.Resources.playButton2;
+                nowPlaying.Text = "";
+                elapsedTime.Text = "00:00";
+                totalTime.Text = "00:00";
+                fullOval.Width = 0;
+                if (songPlayed != -1)
+                {
+                    MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                    aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+                    MusicToTable[songPlayed].settings.setMode("loop", false);
+                    MusicToTable[songPlayed].controls.stop();
+                    songPlayed = -1;
+                }
+                MusicToTable.Clear();
+                amount = songs.Count;
 
-            int numberOfRows = songGrid.Rows.Count;
-            for (int j = 0; j < numberOfRows; j++)
-            {
-                songGrid.Rows.Remove(songGrid.Rows[0]);
-            }
+                int numberOfRows = songGrid.Rows.Count;
+                for (int j = 0; j < numberOfRows; j++)
+                {
+                    songGrid.Rows.Remove(songGrid.Rows[0]);
+                }
 
-            for (int i = 0; i < songs.Count; i++)
-            {
-                WMPLib.WindowsMediaPlayer song = new WMPLib.WindowsMediaPlayer();
-                MusicToTable.Add(song);
-                MusicToTable[i].URL = songs[i];
-                MusicToTable[i].settings.mute = true;
-                MusicToTable[i].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(AddMusicInTable);
+                for (int i = 0; i < songs.Count; i++)
+                {
+                    WMPLib.WindowsMediaPlayer song = new WMPLib.WindowsMediaPlayer();
+                    MusicToTable.Add(song);
+                    MusicToTable[i].URL = songs[i];
+                    MusicToTable[i].settings.mute = true;
+                    MusicToTable[i].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(AddMusicInTable);
+                }
             }
-            
+            catch (Exception ext)
+            {
+                MessageBox.Show("Something went wrong :( Are you sure that you haven't changed the files' path? The following exception occurred: " + ext);
+            }
 
         }
 
@@ -441,100 +510,110 @@ namespace Pimung
          
          private void playStopMusic(object sender, EventArgs e)
          {
-             if (songGrid.Rows.Count > 0)
+             try
              {
-                 if (sender.ToString() == "System.Windows.Forms.DataGridView")
+                 if (songGrid.Rows.Count > 0)
                  {
-                     if (songPlayed != -1)
+                     if (sender.ToString() == "System.Windows.Forms.DataGridView")
                      {
-                         MusicToTable[songPlayed].settings.setMode("loop", false);
-                         MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
-                         aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
-                         MusicToTable[songPlayed].controls.stop();
-                     }
+                         if (songPlayed != -1)
+                         {
+                             MusicToTable[songPlayed].settings.setMode("loop", false);
+                             MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                             aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+                             MusicToTable[songPlayed].controls.stop();
+                         }
 
-                     for (int i = 0; i < MusicToTable.Count; i++)
-                     {
-                         if (songGrid.Rows[songGrid.CurrentCell.RowIndex].Cells[0].FormattedValue.ToString() == MusicToTable[i].currentMedia.getItemInfo("Title"))
+                         for (int i = 0; i < MusicToTable.Count; i++)
                          {
-                             songPlayed = i;
-                             MusicToTable[songPlayed].controls.play();
-                             MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
-                             if (connectedToServer)
+                             if (songGrid.Rows[songGrid.CurrentCell.RowIndex].Cells[0].FormattedValue.ToString() == MusicToTable[i].currentMedia.getItemInfo("Title"))
                              {
-                                 MusicToTable[songPlayed].settings.mute = true;
-                                 play_wireless(SongsPaths[i]);
+                                 songPlayed = i;
+                                 MusicToTable[songPlayed].controls.play();
+                                 MusicToTable[songPlayed].settings.mute = false;
+                                 MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                                 if (connectedToServer)
+                                 {
+                                     MusicToTable[songPlayed].settings.mute = true;
+                                     play_wireless(SongsPaths[i]);
+                                 }
+                                 break;
                              }
-                             break;
                          }
-                     }
-                     MusicToTable[songPlayed].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
-                     aTimer.Enabled = true;
-                     aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                     totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
-                     nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
-                     nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
-                     isPlaying = true;
-                 }
-                 else
-                 {
-                     if (isPlaying)
-                     {
-                         MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
-                         MusicToTable[songPlayed].controls.pause();
-                         aTimer.Enabled = true;
-                         aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
-                         //totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
-                         //nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
-                         if (connectedToServer)
-                         {
-                             MusicToTable[songPlayed].settings.mute = true;        ////////////////////////////////////////////////////////////////////STOP THE PLAYER/////////////
-                             play_wireless(SongsPaths[songPlayed]);
-                         }
-                         isPlaying = false;
-                     }
-                     else if (songPlayed == -1)
-                     {
-                         MusicToTable[0].controls.play();
-                         MusicToTable[0].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
-                         MusicToTable[0].settings.setMode("loop", loopMusic);
-                         songPlayed = 0;
+                         MusicToTable[songPlayed].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
                          aTimer.Enabled = true;
                          aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
                          totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
                          nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
                          nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
-                         if (connectedToServer)
-                         {
-                             MusicToTable[songPlayed].settings.mute = true;
-                             play_wireless(SongsPaths[songPlayed]);
-                         }
                          isPlaying = true;
                      }
                      else
                      {
-                         MusicToTable[songPlayed].controls.play();
-                         MusicToTable[songPlayed].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
-                         MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
-                         aTimer.Enabled = true;
-                         aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                         totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
-                         nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
-                         nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
-                         if (connectedToServer)
+                         if (isPlaying)
                          {
-                             MusicToTable[songPlayed].settings.mute = true;
-                             play_wireless(SongsPaths[songPlayed]);
+                             MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                             MusicToTable[songPlayed].controls.pause();
+                             aTimer.Enabled = true;
+                             aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+                             if (connectedToServer)
+                             {
+                                 MusicToTable[songPlayed].controls.stop();
+                                 if (bwMusic.IsBusy)
+                                     bwMusic.CancelAsync();
+                                 if (bwMusic2.IsBusy)
+                                     bwMusic2.CancelAsync();
+                             }
+                             isPlaying = false;
                          }
-                         isPlaying = true;
+                         else if (songPlayed == -1)
+                         {
+                             MusicToTable[0].controls.play();
+                             MusicToTable[0].settings.mute = false;
+                             MusicToTable[0].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                             MusicToTable[0].settings.setMode("loop", loopMusic);
+                             songPlayed = 0;
+                             aTimer.Enabled = true;
+                             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                             totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+                             nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+                             nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
+                             if (connectedToServer)
+                             {
+                                 MusicToTable[songPlayed].settings.mute = true;
+                                 play_wireless(SongsPaths[songPlayed]);
+                             }
+                             isPlaying = true;
+                         }
+                         else
+                         {
+                             MusicToTable[songPlayed].controls.play();
+                             MusicToTable[songPlayed].settings.mute = false;
+                             MusicToTable[songPlayed].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                             MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                             aTimer.Enabled = true;
+                             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                             totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
+                             nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
+                             nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
+                             if (connectedToServer)
+                             {
+                                 MusicToTable[songPlayed].settings.mute = true;
+                                 play_wireless(SongsPaths[songPlayed]);
+                             }
+                             isPlaying = true;
+                         }
                      }
+                     if (isPlaying)
+                         PlayButton.BackgroundImage = Pimung.Properties.Resources.PauseBotton;
+                     else
+                         PlayButton.BackgroundImage = Pimung.Properties.Resources.playButton2;
                  }
-                 if(isPlaying)
-                     PlayButton.BackgroundImage = Pimung.Properties.Resources.PauseBotton;
-                 else
-                     PlayButton.BackgroundImage = Pimung.Properties.Resources.playButton2;
              }
-             
+             catch (Exception ext)
+             {
+                 MessageBox.Show("Something went wrong :( Are you sure that you haven't changed the files' path? The following exception occurred: " + ext);
+             }
              
 
          }
@@ -553,13 +632,17 @@ namespace Pimung
                  checkWifi.Enabled = false;
              }
 
-             else
+             else if (!viaWifi && connectedToServer)
              {
-                 //if (bwServer.IsBusy)
-                 //{
-                 //    bwServer.CancelAsync();
-                 //    while (bwServer.IsBusy) { }
-                 //}
+                 if (bwMusic.IsBusy)
+                     bwMusic.CancelAsync();
+                 if (bwMusic2.IsBusy)
+                     bwMusic2.CancelAsync();
+                 connectedToServer = false;
+                 object snd = new object();
+                 EventArgs evt = new EventArgs();
+                 Console.WriteLine("Play");
+                 playStopMusic(snd, evt);
              }
          }
 
@@ -653,38 +736,51 @@ namespace Pimung
                  aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
                  MusicToTable[songPlayed].controls.stop();
 
-                for (int i = 0; i < MusicToTable.Count; i++)
-                {
-
-                     if (i == MusicToTable.Count - 1)
-                     {
-                         for (int k = 0; k < MusicToTable.Count; k++)
-                         {
-                             if (songGrid.Rows[0].Cells[0].FormattedValue.ToString() == MusicToTable[k].currentMedia.getItemInfo("Title"))
-                             {
-                                 songPlayed = k;
-                                 break;
-                             }
-                        }
-                        break;
-                     }
-                     if (songGrid.Rows[i].Cells[0].FormattedValue.ToString() == MusicToTable[songPlayed].currentMedia.getItemInfo("Title"))
+                 if (MusicToTable.Count == 1)
+                     songPlayed = 0;
+                 else if (!shuffleMusic)
+                 {
+                     for (int i = 0; i < MusicToTable.Count; i++)
                      {
 
-                         for (int m = 0; m < MusicToTable.Count; m++)
+                         if (i == MusicToTable.Count - 1)
                          {
-                             if(songGrid.Rows[i + 1].Cells[0].FormattedValue.ToString() == MusicToTable[m].currentMedia.getItemInfo("Title"))
+                             for (int k = 0; k < MusicToTable.Count; k++)
                              {
-                                 songPlayed = m;
-                                 break;
+                                 if (songGrid.Rows[0].Cells[0].FormattedValue.ToString() == MusicToTable[k].currentMedia.getItemInfo("Title"))
+                                 {
+                                     songPlayed = k;
+                                     break;
+                                 }
                              }
+                             break;
                          }
-                        break;
+                         if (songGrid.Rows[i].Cells[0].FormattedValue.ToString() == MusicToTable[songPlayed].currentMedia.getItemInfo("Title"))
+                         {
+
+                             for (int m = 0; m < MusicToTable.Count; m++)
+                             {
+                                 if (songGrid.Rows[i + 1].Cells[0].FormattedValue.ToString() == MusicToTable[m].currentMedia.getItemInfo("Title"))
+                                 {
+                                     songPlayed = m;
+                                     break;
+                                 }
+                             }
+                             break;
+                         }
+                     }
                  }
-             }
+                 else
+                     songPlayed = random.Next(0, MusicToTable.Count);
              
              MusicToTable[songPlayed].controls.play();
+             MusicToTable[songPlayed].settings.mute = false;
              MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+             if (connectedToServer)
+             {
+                 MusicToTable[songPlayed].settings.mute = true;
+                 play_wireless(SongsPaths[songPlayed]);
+             }
              totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
              nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
              nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
@@ -733,7 +829,13 @@ namespace Pimung
                  }
 
                  MusicToTable[songPlayed].controls.play();
+                 MusicToTable[songPlayed].settings.mute = false;
                  MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
+                 if (connectedToServer)
+                 {
+                     MusicToTable[songPlayed].settings.mute = true;
+                     play_wireless(SongsPaths[songPlayed]);
+                 }
                  totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
                  nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
                  nowPlaying.Location = new Point(StrokeOval.Location.X + (StrokeOval.Width - nowPlaying.Width) / 2, elapsedTime.Location.Y - 35);
@@ -814,7 +916,13 @@ namespace Pimung
                          songPlayed = randomSong;
                      }
                      MusicToTable[songPlayed].controls.play();
+                     MusicToTable[songPlayed].settings.mute = false;
                      MusicToTable[songPlayed].PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
+                     if (connectedToServer)
+                     {
+                         MusicToTable[songPlayed].settings.mute = true;
+                         play_wireless(SongsPaths[songPlayed]);
+                     }
                      MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
                      totalTime.Text = MusicToTable[songPlayed].currentMedia.durationString;
                      nowPlaying.Text = "Now playing: " + MusicToTable[songPlayed].currentMedia.getItemInfo("Title");
@@ -823,21 +931,6 @@ namespace Pimung
                      aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
                  }
              }
-         }
-
-         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-         {
-             if (portFound)
-             {
-                 try
-                 {
-                     currentPort.Close();
-                 }
-                 catch { }
-             }
-             Pimung.Properties.Settings.Default.paths = SongsPaths;
-             Pimung.Properties.Settings.Default.itemsSaved = items;
-             Pimung.Properties.Settings.Default.Save();
          }
 
          private void playerButton_Click(object sender, EventArgs e)
@@ -1021,13 +1114,34 @@ namespace Pimung
                 reverseIndices.Add(list[list.Count - i - 1]);
             }
         }
-        List<string> quotesList = new List<string>();
+
         private void pressMe_Click(object sender, EventArgs e)
         {
 
 
             actualQuote.Text = quotesArray[random.Next(0, quotesArray.Length)];
 
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (pcm != null)
+                pcm.Dispose();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (portFound)
+            {
+                try
+                {
+                    currentPort.Close();
+                }
+                catch { }
+            }
+            Pimung.Properties.Settings.Default.paths = SongsPaths;
+            Pimung.Properties.Settings.Default.itemsSaved = items;
+            Pimung.Properties.Settings.Default.Save();
         }
     }
 }

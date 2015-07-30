@@ -52,8 +52,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(107, 20);
             this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "192.168.1.6";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.Text = "192.168.1.11";
             // 
             // button1
             // 

@@ -19,11 +19,6 @@ namespace Pimung
             InitializeComponent();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             string ip = textBox1.Text;
@@ -44,8 +39,11 @@ namespace Pimung
 
         private void ChooseIP_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.mainForm.viaWifi = false;
-            this.mainForm.checkWifi.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            
+            if (!this.mainForm.connectedToServer)
+            {
+                this.mainForm.checkWifi.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            }
             if (this.mainForm.bwServer.IsBusy)
             {
                 this.mainForm.bwServer.CancelAsync();
