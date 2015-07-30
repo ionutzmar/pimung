@@ -990,15 +990,18 @@ namespace Pimung
              }
              else
              {
-                 if(currentPort.IsOpen)
+                 if (currentPort != null)
                  {
-                     try
+                     if (currentPort.IsOpen)
                      {
-                         currentPort.Close();
+                         try
+                         {
+                             currentPort.Close();
+                         }
+                         catch { }
+                         readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
+                         portFound = false;
                      }
-                     catch { }
-                     readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
-                     portFound = false;
                  }
              }
          }
