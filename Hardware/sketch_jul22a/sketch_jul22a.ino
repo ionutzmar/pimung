@@ -135,7 +135,7 @@ void loop() {
     lcd.print(temp);
     lcd.print(" ");
     lcd.write(byte(0));
-    lcd.print("C");
+    lcd.print("C  ");
 
     knocks(analogRead(piezo));
     currentControlState = digitalRead(controlPin);
