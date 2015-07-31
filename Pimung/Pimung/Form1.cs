@@ -124,7 +124,7 @@ namespace Pimung
                 reType.Visible = true;
             }
 
-            
+            setComPorts();
             bwMusic.DoWork += bwMusic_DoWork;
             bwMusic.WorkerSupportsCancellation = true;
             bwMusic2.DoWork += bwMusic2_DoWork;
@@ -1002,41 +1002,45 @@ namespace Pimung
 
         private  void readFromPort(object e, ElapsedEventArgs args)
         {
-            if (currentPort.IsOpen)
+            try
             {
-                if (currentPort.BytesToRead > 0)
+                if (currentPort.IsOpen)
                 {
-                    int btr = currentPort.ReadByte();
-                    if (btr == 1)
+                    if (currentPort.BytesToRead > 0)
                     {
-                        object sender = new object();
-                        EventArgs evt = new EventArgs();
-                        if (totalTime.InvokeRequired)
-                            totalTime.Invoke((Action)delegate { playStopMusic(sender, evt); });
-                    }
-                    if (btr == 2)
-                    {
-                        object sender = new object();
-                        EventArgs evt = new EventArgs();
-                        if (totalTime.InvokeRequired)
-                            totalTime.Invoke((Action)delegate { ForwardButton_Click(sender, evt); });
-                    }
-                    if (btr == 3)
-                    {
-                        object sender = new object();
-                        EventArgs evt = new EventArgs();
-                        if (totalTime.InvokeRequired)
-                            totalTime.Invoke((Action)delegate { BackwardButton_Click(sender, evt); });
+                        int btr = currentPort.ReadByte();
+                        if (btr == 1)
+                        {
+                            object sender = new object();
+                            EventArgs evt = new EventArgs();
+                            if (totalTime.InvokeRequired)
+                                totalTime.Invoke((Action)delegate { playStopMusic(sender, evt); });
+                        }
+                        if (btr == 2)
+                        {
+                            object sender = new object();
+                            EventArgs evt = new EventArgs();
+                            if (totalTime.InvokeRequired)
+                                totalTime.Invoke((Action)delegate { ForwardButton_Click(sender, evt); });
+                        }
+                        if (btr == 3)
+                        {
+                            object sender = new object();
+                            EventArgs evt = new EventArgs();
+                            if (totalTime.InvokeRequired)
+                                totalTime.Invoke((Action)delegate { BackwardButton_Click(sender, evt); });
+                        }
                     }
                 }
-            }
-            else
-            {
-                readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
-                portFound = false;
-                portTimer.Enabled = false;
+                else
+                {
+                    readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    portFound = false;
+                    portTimer.Enabled = false;
 
+                }
             }
+            catch { }
         }
 
         private void mainPurpose_KeyDown(object sender, KeyEventArgs e)
