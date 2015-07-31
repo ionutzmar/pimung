@@ -275,6 +275,7 @@
             // 
             this.ReplayButton.BackgroundImage = global::Pimung.Properties.Resources.Replay;
             this.ReplayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ReplayButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ReplayButton.Location = new System.Drawing.Point(720, 73);
             this.ReplayButton.Name = "ReplayButton";
             this.ReplayButton.Size = new System.Drawing.Size(32, 20);
@@ -286,6 +287,7 @@
             // 
             this.ShuffleButton.BackgroundImage = global::Pimung.Properties.Resources.Shuffle;
             this.ShuffleButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ShuffleButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ShuffleButton.Location = new System.Drawing.Point(385, 56);
             this.ShuffleButton.Name = "ShuffleButton";
             this.ShuffleButton.Size = new System.Drawing.Size(32, 20);

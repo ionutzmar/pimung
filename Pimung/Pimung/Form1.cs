@@ -66,8 +66,6 @@ namespace Pimung
                 bwMusic.CancelAsync();
                 Console.WriteLine("Cancel async");
                 bwMusic2.RunWorkerAsync(path);
-                //bwMusic.Dispose();
-                // while (bwMusic.IsBusy) { }
             }
             else
             {
@@ -88,27 +86,36 @@ namespace Pimung
             try
             {
                 if (MusicToTable[songPlayed].currentMedia.getItemInfo("FileType") == "mp3")
+                {
                     pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
+                }
                 else
-                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.WaveFileReader((string)e.Argument));
+                {
+                    e.Cancel = true;
+                    object obj = new object();
+                    EventArgs evt = new EventArgs();
+                    playStopMusic(obj, evt);
+                    MessageBox.Show("I can not send wav files to server. Please try mp3 files.");
+                    return;
+                }
                 int oneSec = 1204 * 4;  //1204 samples * 2 channels * 2 bytes each
                 byte[] buffer = new byte[oneSec];
                 int ret = 0;
-                
+
                 do
                 {
                     if (bwMusic.CancellationPending)
                     {
                         pcm.Dispose();
                         e.Cancel = true;
-                        Console.WriteLine("Has returned");
+                        Console.WriteLine("Has returned1");
                         return;
                     }
                     if (pcm != null)
                         ret = pcm.Read(buffer, 0, oneSec);
                     if (ns !=null)
                      ns.Write(buffer, 0, oneSec);
-                } while (ret != -1);
+                } while (ret >= 0);
                 pcm.Dispose();
                 
                 
@@ -127,7 +134,14 @@ namespace Pimung
                 if (MusicToTable[songPlayed].currentMedia.getItemInfo("FileType") == "mp3")
                     pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
                 else
-                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.WaveFileReader((string)e.Argument));
+                {
+                    e.Cancel = true;
+                    object obj = new object();
+                    EventArgs evt = new EventArgs();
+                    playStopMusic(obj, evt);
+                    MessageBox.Show("I can not send wav files to server. Please try mp3 files.");
+                    return;
+                }
                 int oneSec = 1204 * 4;
                 byte[] buffer = new byte[oneSec];
                 int ret = 0;
@@ -138,7 +152,7 @@ namespace Pimung
                     {
                         pcm.Dispose();
                         e.Cancel = true;
-                        Console.WriteLine("Has returned");
+                        Console.WriteLine("Has returned2");
                         return;
                     }
                     ret = pcm.Read(buffer, 0, oneSec);
