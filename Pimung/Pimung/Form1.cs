@@ -302,6 +302,10 @@ namespace Pimung
             catch
             {
                 connectedToServer = false;
+                if (bwMusic.IsBusy)
+                    bwMusic.CancelAsync();
+                if (bwMusic2.IsBusy)
+                    bwMusic2.CancelAsync();
                 MessageBox.Show("Something went wrong with the server");
             }
         }
@@ -342,6 +346,10 @@ namespace Pimung
             }
             catch
             {
+                if (bwMusic.IsBusy)
+                    bwMusic.CancelAsync();
+                if (bwMusic2.IsBusy)
+                    bwMusic2.CancelAsync();
                 connectedToServer = false;
                 MessageBox.Show("Something went wrong");
             }
