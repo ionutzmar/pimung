@@ -245,7 +245,11 @@ void init_leds()
 void set_leds(int row, int col)
 {
 	int i;
-	digitalWrite(cols[col], HIGH);
+	if (row > 5)
+		row = 4;
+	if (col > 11)
+		col = 11;
+		digitalWrite(cols[col], HIGH);
 	for (i = 0; i < row; i++) {
 		digitalWrite(rows[i], HIGH);
 	}
@@ -404,6 +408,7 @@ int main(int argc, const char* argv[])
 	printf("New client connected!\n");
 	double *samples = (double *)malloc((2 * frames + 1) * sizeof(double));
 	float levels[12];
+	float max = 0;
 
 	while (1) {
 		received = read(client_fd, buffer, buff_size);
@@ -431,29 +436,44 @@ int main(int argc, const char* argv[])
 			}
 
 			four1(samples, received / 4, 1);
-			float max = 0;
+
 
 			for (i = 0; i < 12; i++) {
 				int j;
-				int start = i * (received / 4 / 12);
-				for (j = start; j < start + (received / 4 / 12); j++) {
-					levels[i] = sqrt(samples[2 * j + 1] * samples[2 * j + 1] + samples[2 * j + 2] * samples[2 * j + 2]);
+
+				int N = received / 4;
+				
+				float peak = 0;
+				int p1 = (int)pow(2, i *  8/ (float)(12 - 1));  //8 is log2 from received / 4
+				if (p1 > N - 1)
+					p1 = N - 1;
+				if (p1 <= 0) 
+					p1 = 1;
+
+				int p0 = (int)pow(2, (i - 1) * 8 / (float)(12 - 1));
+				if (p0 > N - 1) 
+					p0 = N - 1;
+				if (p0 < 0) p0 = 0;
+
+				for (j = p0; j < p1; j++)
+				{
+					float mag = sqrt(samples[2 * j + 1] * samples[2 * j + 1] + samples[2 * j + 2] * samples[2 * j + 2]);
+					if (peak < mag) 
+						peak = mag;
 				}
-				// levels[i] /= frames / 12;
-				if (levels[i] > max)
-					max = levels[i];
-			}
+		
+				levels[i] = sqrt(peak);
+				printf("Peak: %f", peak);
+				levels[i] *= 10;
 
-			for (i = 0; i < 12; i++) {
-				levels[i] /= max;
-				levels[i] *= 5;
-
-				int lvl = (int)levels[i]; /*NOT FUCKING WORKING */
+				int lvl = (int)levels[i];
 				clear_leds();
 				set_leds(lvl, i); // row, col
 				//
 				printf("Column: %d, Level: %d\n", i, lvl);
+
 			}
+
 		}
 		else
 		{
