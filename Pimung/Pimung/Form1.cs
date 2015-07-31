@@ -23,13 +23,13 @@ namespace Pimung
     public partial class Form1 : Form
     {
 
-        Boolean startDragging;
-        int panel1OriginalHeight;
-        internal List<string> SongsPaths = new List<string>();
-        internal List<WMPLib.WindowsMediaPlayer> MusicToTable = new List<WMPLib.WindowsMediaPlayer>();
-        List<int> indices = new List<int>();
-        List<int> reverseIndices = new List<int>();
-        List<string> items = new List<string>();
+        Boolean startDragging; //to show the menu
+        int panel1OriginalHeight; //panel 1 is the panel which contains all the upper bottons like play forward, shuffle, etc
+        internal List<string> SongsPaths = new List<string>(); //the paths of the songs
+        internal List<WMPLib.WindowsMediaPlayer> MusicToTable = new List<WMPLib.WindowsMediaPlayer>(); //contains the songs that are in the table
+        List<int> indices = new List<int>();   //useful for removing items from checkedBoxList
+        List<int> reverseIndices = new List<int>();//useful for removing items from checkedBoxList
+        List<string> items = new List<string>(); //these are the items in the to-do-list
         int amount, counter = 0; // counts the number of times 'AddMusicInTable' was called. Useful for adding music to table.
         int songPlayed = -1; //index of the last song palyed
         Boolean isPlaying = false;
@@ -37,21 +37,22 @@ namespace Pimung
         Boolean loopMusic = false;
         Boolean shuffleMusic = false;
         internal Boolean ChooseIPFormIsOpen = false;
-        internal Boolean rmMusicIsOpen = false;
-        System.Timers.Timer aTimer = new System.Timers.Timer();
-        System.Timers.Timer portTimer = new System.Timers.Timer();
+        internal Boolean rmMusicIsOpen = false;  //remove Music Dialog is open
+        System.Timers.Timer aTimer = new System.Timers.Timer();  //for showing how much time has passed since the song has started
+        System.Timers.Timer portTimer = new System.Timers.Timer(); //periodically check for bytes at the currentPort
         Random random = new Random();
         int randomSong;
         SerialPort currentPort;
         Boolean portFound;
-        NetworkStream ns = null;
+        TcpClient client;
+        string lastIp = "";
+        NetworkStream ns = null;  //for sending music via WiFi
         NAudio.Wave.WaveStream pcm = null;
-        BackgroundWorker bwMusic = new BackgroundWorker();
+        BackgroundWorker bwMusic = new BackgroundWorker();  //I have 2 backGroundWorkers for music because it takes a while for one the finish work
         BackgroundWorker bwMusic2 = new BackgroundWorker();
         internal BackgroundWorker bwServer = new BackgroundWorker();
         internal Boolean connectedToServer = false;
-        TcpClient client;
-        string lastIp = "";
+        
 
         string[] quotesArray = {"Arguing with a fool only proves that there are two...", "The key to success is not through achievement, but through enthusiasm.  Malcolm Forbes", "All you need in this life is ignorance and confidence, and then success is sure.  Mark Twain", "Age is of no importance unless you're a cheese.  Billie Burke", "The best way to cheer yourself up is to try to cheer somebody else up. Mark Twain", "The elevator to success is out of order. You'll have to use the stairs: one step at a time.  Joe Girard", "I always wanted to be somebody, but now I realize I should have been more specific.  Lily Tomlin", "If you think you are too small to be effective, you have never been in the dark with a mosquito.  Betty Reese", "Hope is the dream of a waking man.  Aristotle", "He who knows others is wise. He who knows himself is enlightened.  Lao Tzu", "When you do not know what you are doing and what you are doing is the best  that is inspiration.  Robert Bresson", "It is not the answer that enlightens, but the question.  Eugene Ionesco Decouvertes", "It takes less time to do things right than to explain why you did it wrong.  Henry Wadsworth Longfellow", "Opportunity is missed by most people because it is dressed in overalls and looks like work.  Thomas Eddison", "Great spirits have always encountered violent opposition from mediocre minds.  Albert Einstein", "People say nothing is impossible, but I do nothing every day.  A.A. Milne", "Failure is the condiment that gives success its flavor.  Truman Capote", "People often say that motivation doesn't last. Well, neither does bathing; that's why we recommend it daily.  Zig Ziglar", "Life is like photography. You need the negatives to develop.  Unknown", "It is amazing what you can accomplish if you do not care who gets the credit.  Harry S. Truman", "Seven days without laughter make one weak.  Joel Goodman", "Vision without action is daydream. Action without vision is nightmare.  Japanese proverb", "Good habits are as addictive as bad habits, and a lot more rewarding.", "Sunglasses: allowing you stare at people without getting caught. It's like Facebook in real life.", "No matter how you feel, get up, dress up, show up, and never give up!", "A good laugh and a long sleep are the two best cures for anything.", "Sometimes the wrong choices bring us to the right places.", "Change your thoughts and you change your world." };
         public Form1()
@@ -59,146 +60,9 @@ namespace Pimung
             InitializeComponent();
         }
 
-        private void play_wireless(string path)
-        {
-            if (bwMusic.IsBusy)
-            {
-                bwMusic.CancelAsync();
-                Console.WriteLine("Cancel async");
-                bwMusic2.RunWorkerAsync(path);
-            }
-            else
-            {
-                if (bwMusic2.IsBusy)
-                {
-                    bwMusic2.CancelAsync();
-                    Console.WriteLine("O intrat");
-                }
-                bwMusic.RunWorkerAsync(path);
-                return;
-            }
-       
+        
 
-        }
-
-        void bwMusic_DoWork(object sender, DoWorkEventArgs e) //bwMusic
-        {
-            try
-            {
-                if (MusicToTable[songPlayed].currentMedia.getItemInfo("FileType") == "mp3")
-                {
-                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
-                }
-                else
-                {
-                    e.Cancel = true;
-                    object obj = new object();
-                    EventArgs evt = new EventArgs();
-                    playStopMusic(obj, evt);
-                    MessageBox.Show("I can not send wav files to server. Please try mp3 files.");
-                    return;
-                }
-                int oneSec = 1204 * 4;  //1204 samples * 2 channels * 2 bytes each
-                byte[] buffer = new byte[oneSec];
-                int ret = 0;
-
-                do
-                {
-                    if (bwMusic.CancellationPending)
-                    {
-                        pcm.Dispose();
-                        e.Cancel = true;
-                        Console.WriteLine("Has returned1");
-                        return;
-                    }
-                    if (pcm != null)
-                        ret = pcm.Read(buffer, 0, oneSec);
-                    if (ns !=null)
-                     ns.Write(buffer, 0, oneSec);
-                } while (ret >= 0);
-                pcm.Dispose();
-                
-                
-            }
-            catch
-            {
-                MessageBox.Show("Something went wrong with the server");
-                connectedToServer = false;
-            }
-        }
-
-        void bwMusic2_DoWork(object sender, DoWorkEventArgs e) //bwMusic2
-        {
-            try
-            {
-                if (MusicToTable[songPlayed].currentMedia.getItemInfo("FileType") == "mp3")
-                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
-                else
-                {
-                    e.Cancel = true;
-                    object obj = new object();
-                    EventArgs evt = new EventArgs();
-                    playStopMusic(obj, evt);
-                    MessageBox.Show("I can not send wav files to server. Please try mp3 files.");
-                    return;
-                }
-                int oneSec = 1204 * 4;
-                byte[] buffer = new byte[oneSec];
-                int ret = 0;
-
-                do
-                {
-                    if (bwMusic2.CancellationPending)
-                    {
-                        pcm.Dispose();
-                        e.Cancel = true;
-                        Console.WriteLine("Has returned2");
-                        return;
-                    }
-                    ret = pcm.Read(buffer, 0, oneSec);
-                    ns.Write(buffer, 0, oneSec);
-                } while (ret != -1);
-                pcm.Dispose();
-
-
-            }
-            catch
-            {
-                MessageBox.Show("Something went wrong");
-                connectedToServer = false;
-            }
-        }
-
-        void bwServer_DoWork(object sender, DoWorkEventArgs e)  //bwserver
-        {
-            try
-            {
-                Console.WriteLine(lastIp != (string)e.Argument);
-                Console.WriteLine(lastIp);
-                Console.WriteLine((string)e.Argument);
-                if (lastIp != (string)e.Argument)
-                {
-                    lastIp = (string)e.Argument;
-                    client = new TcpClient(lastIp, 7654);
-                    ns = client.GetStream();
-
-                    Console.WriteLine(client.Client.LocalEndPoint.ToString());
-                    Console.WriteLine("o intrat");
-                }
-
-                MessageBox.Show("Connected to server!");
-                connectedToServer = true;
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("could not connect to server");
-                MessageBox.Show(ex.Message);
-                connectedToServer = false;
-            }
-        }
-
-        private void Form1_Load(object sender, EventArgs e) //Set up a few components after the app has loaded
+        private void Form1_Load(object sender, EventArgs e) //Set up a few components after the app has been loaded
         {
             panel2.Height = 10;
             panel2.Location = new Point(0, panel1.Height + panel1.Location.Y);
@@ -225,9 +89,9 @@ namespace Pimung
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Enabled = true;
             aTimer.Interval = 200;
-            //aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             aTimer.Start();
 
+            //bring stuff back
             if(Pimung.Properties.Settings.Default.itemsSaved != null)
             {
                 items = Pimung.Properties.Settings.Default.itemsSaved;
@@ -240,7 +104,6 @@ namespace Pimung
             {
                 SongsPaths = Pimung.Properties.Settings.Default.paths;
                 LoadMusicInTable(SongsPaths);
-                Console.WriteLine(SongsPaths);
             }
             if (Pimung.Properties.Settings.Default.date == null || Pimung.Properties.Settings.Default.purpose == null || Pimung.Properties.Settings.Default.date != DateTime.Now.ToShortDateString())
             {
@@ -260,10 +123,6 @@ namespace Pimung
                 purposeAnswer.Visible = true;
                 reType.Visible = true;
             }
-            setComPorts();
-            if(portFound)
-                Console.WriteLine(currentPort.PortName);
-
 
             
             bwMusic.DoWork += bwMusic_DoWork;
@@ -276,74 +135,10 @@ namespace Pimung
             Form1_Resize(sender, e);
         }
 
-        private void setComPorts()
-        {
-            try
-            {
-                string[] ports = SerialPort.GetPortNames();
-                foreach(string port in ports)
-                {
-                    currentPort = new SerialPort(port, 9600);
-                    if (detectArduino())
-                    {
-                        portFound = true;
-                        break;
-                    }
-                    else
-                        portFound = false;
-                }
-
-            }
-            catch
-            {
-            }
-
-
-        }
-
-        Boolean detectArduino()
-        {
-            try
-            {
-                byte[] buffer = new byte[5];
-                buffer[0] = Convert.ToByte(16);
-                buffer[1] = Convert.ToByte(128);
-                buffer[2] = Convert.ToByte(0);
-                buffer[3] = Convert.ToByte(0);
-                buffer[4] = Convert.ToByte(4);
-                int returnAscii = 0;
-                //char returnChar = (char)returnAscii;
-                currentPort.Open();
-                currentPort.Write(buffer, 0, 5);
-                Thread.Sleep(1000);
-                int count = currentPort.BytesToRead;
-                string returnMessage = "";
-                while(count > 0)
-                {
-                    returnAscii = currentPort.ReadByte();
-                    returnMessage = returnMessage + Convert.ToChar(returnAscii);
-                    count--;
-                }
-                currentPort.Close();
-                if (returnMessage.Contains("Hello budie!"))
-                    return true;
-                else
-                    return false;
-
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-
         private void Form1_Resize(object sender, EventArgs e) //happends when the main form is resized
         {
             panel1.Width = this.Width;
             panel2.Width = this.Width;
-
-            
             WhatDoToday.Location = new Point(this.Width - WhatDoToday.Width - 30, 40);
             today.Location = new Point(WhatDoToday.Location.X + (WhatDoToday.Width - today.Width) / 2, WhatDoToday.Location.Y);
             StrokeOval.Location = new Point(this.Width / 2 - (WhatDoToday.Location.X - this.Width / 2), 80);
@@ -446,6 +241,194 @@ namespace Pimung
             startDragging = false;
         }
 
+        private void play_wireless(string path)
+        {
+            if (bwMusic.IsBusy)
+            {
+                bwMusic.CancelAsync();
+                bwMusic2.RunWorkerAsync(path);
+            }
+            else
+            {
+                if (bwMusic2.IsBusy)
+                {
+                    bwMusic2.CancelAsync();
+                }
+                bwMusic.RunWorkerAsync(path);
+                return;
+            }
+
+
+        }
+
+        void bwMusic_DoWork(object sender, DoWorkEventArgs e) //bwMusic
+        {
+            try
+            {
+                if (MusicToTable[songPlayed].currentMedia.getItemInfo("FileType") == "mp3") //check for extension
+                {
+                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
+                }
+                else
+                {
+                    e.Cancel = true;
+                    object obj = new object();
+                    EventArgs evt = new EventArgs();
+                    playStopMusic(obj, evt);
+                    MessageBox.Show("I can not send wav files to server. Please try mp3 files.");
+                    return;
+                }
+                int oneSec = 1204 * 4;  //1204 samples * 2 channels * 2 bytes each
+                byte[] buffer = new byte[oneSec];
+                int ret = 0;
+
+                do
+                {
+                    if (bwMusic.CancellationPending)
+                    {
+                        pcm.Dispose();
+                        e.Cancel = true;
+                        return;
+                    }
+                    if (pcm != null)
+                        ret = pcm.Read(buffer, 0, oneSec);
+                    if (ns != null)
+                        ns.Write(buffer, 0, oneSec);
+                } while (ret >= 0);
+                pcm.Dispose();
+
+
+            }
+            catch
+            {
+                connectedToServer = false;
+                MessageBox.Show("Something went wrong with the server");
+            }
+        }
+
+        void bwMusic2_DoWork(object sender, DoWorkEventArgs e) //bwMusic2
+        {
+            try
+            {
+                if (MusicToTable[songPlayed].currentMedia.getItemInfo("FileType") == "mp3")
+                    pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader((string)e.Argument));
+                else
+                {
+                    e.Cancel = true;
+                    object obj = new object();
+                    EventArgs evt = new EventArgs();
+                    playStopMusic(obj, evt);
+                    MessageBox.Show("I can not send wav files to server. Please try mp3 files.");
+                    return;
+                }
+                int oneSec = 1204 * 4;
+                byte[] buffer = new byte[oneSec];
+                int ret = 0;
+
+                do
+                {
+                    if (bwMusic2.CancellationPending)
+                    {
+                        pcm.Dispose();
+                        e.Cancel = true;
+                        return;
+                    }
+                    ret = pcm.Read(buffer, 0, oneSec);
+                    ns.Write(buffer, 0, oneSec);
+                } while (ret >= 0);
+                pcm.Dispose();
+
+
+            }
+            catch
+            {
+                connectedToServer = false;
+                MessageBox.Show("Something went wrong");
+            }
+        }
+
+        void bwServer_DoWork(object sender, DoWorkEventArgs e)  //connect to server
+        {
+            try
+            {
+                if (lastIp != (string)e.Argument)
+                {
+                    lastIp = (string)e.Argument;
+                    client = new TcpClient(lastIp, 7654);
+                    ns = client.GetStream();
+                }
+
+                MessageBox.Show("Connected to server!");
+                connectedToServer = true;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                connectedToServer = false;
+            }
+        }
+        private void setComPorts()
+        {
+            try
+            {
+                string[] ports = SerialPort.GetPortNames();
+                foreach (string port in ports)
+                {
+                    currentPort = new SerialPort(port, 9600);
+                    if (detectArduino())
+                    {
+                        portFound = true;
+                        break;
+                    }
+                    else
+                        portFound = false;
+                }
+
+            }
+            catch
+            {
+            }
+
+
+        }
+
+        Boolean detectArduino()
+        {
+            try
+            {
+                byte[] buffer = new byte[5];
+                buffer[0] = Convert.ToByte(16);
+                buffer[1] = Convert.ToByte(128);
+                buffer[2] = Convert.ToByte(0);
+                buffer[3] = Convert.ToByte(0);
+                buffer[4] = Convert.ToByte(4);
+                int returnAscii = 0;
+                //char returnChar = (char)returnAscii;
+                currentPort.Open();
+                currentPort.Write(buffer, 0, 5);
+                Thread.Sleep(1000);
+                int count = currentPort.BytesToRead;
+                string returnMessage = "";
+                while (count > 0)
+                {
+                    returnAscii = currentPort.ReadByte();
+                    returnMessage = returnMessage + Convert.ToChar(returnAscii);
+                    count--;
+                }
+                currentPort.Close();
+                if (returnMessage.Contains("Hello budie!"))
+                    return true;
+                else
+                    return false;
+
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private void AddMusicBotton_Click(object sender, EventArgs e)
         {
             if (BrowseMusic.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -473,6 +456,10 @@ namespace Pimung
                 elapsedTime.Text = "00:00";
                 totalTime.Text = "00:00";
                 fullOval.Width = 0;
+                if (bwMusic.IsBusy)
+                    bwMusic.CancelAsync();
+                if (bwMusic2.IsBusy)
+                    bwMusic2.CancelAsync();
                 if (songPlayed != -1)
                 {
                     MusicToTable[songPlayed].PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(OnPlayStateChange);
@@ -541,7 +528,7 @@ namespace Pimung
              {
                  if (songGrid.Rows.Count > 0)
                  {
-                     if (sender.ToString() == "System.Windows.Forms.DataGridView")
+                     if (sender.ToString() == "System.Windows.Forms.DataGridView") //duble-click from table
                      {
                          if (songPlayed != -1)
                          {
@@ -661,14 +648,13 @@ namespace Pimung
 
              else if (!viaWifi && connectedToServer)
              {
-                 if (bwMusic.IsBusy)
+                 if (bwMusic.IsBusy)  //stop the workers
                      bwMusic.CancelAsync();
                  if (bwMusic2.IsBusy)
                      bwMusic2.CancelAsync();
                  connectedToServer = false;
                  object snd = new object();
                  EventArgs evt = new EventArgs();
-                 Console.WriteLine("Play");
                  playStopMusic(snd, evt);
              }
          }
@@ -686,8 +672,6 @@ namespace Pimung
                      MusicToTable[songPlayed].settings.setMode("loop", loopMusic);
                  if (shuffleMusic && sender.Equals(ReplayButton))
                      ShuffleButton_Click(sender, e);
-                 Console.WriteLine("sender: " + sender.Equals(ReplayButton));
-                 Console.WriteLine("e: " + e);
              }
          }
 
@@ -705,7 +689,7 @@ namespace Pimung
              }
          }
 
-         private  void OnTimedEvent(object e, ElapsedEventArgs args)
+         private  void OnTimedEvent(object e, ElapsedEventArgs args)  //for showing how much time has passed since the song has sterted
          {
              try
              {
@@ -716,9 +700,8 @@ namespace Pimung
                  }
 
              }
-             catch(Exception exc)
+             catch
              {
-                 Console.WriteLine("here1: " + exc);
                  this.Close();
              }
              try
@@ -739,9 +722,8 @@ namespace Pimung
                  //SongPlayed is greater than the MusicToTable size.
                  //This will be solved in LoadMusicInTable(songs)
              }
-             catch (Exception exp)
+             catch
              {
-                 Console.WriteLine("here2: " + exp);
                  this.Close();
              }
 
@@ -926,9 +908,8 @@ namespace Pimung
                                      break;
                                  }
                              }
-                             catch(Exception exp)
+                             catch
                              {
-                                 Console.WriteLine(exp);
                                  this.Close();
                              }
                          }
@@ -960,7 +941,7 @@ namespace Pimung
              }
          }
 
-         private void playerButton_Click(object sender, EventArgs e)
+         private void playerButton_Click(object sender, EventArgs e)  //the buttons from the left
          {
              songGrid.Visible = true;
              listsLayout.Visible = false;
@@ -985,7 +966,6 @@ namespace Pimung
                  if (portFound)
                  {
                      MessageBox.Show("Connected on " + currentPort.PortName);
-                     Console.WriteLine(currentPort.PortName);
                      portTimer.Elapsed += new ElapsedEventHandler(readFromPort);
                      portTimer.Interval = 500;
                      portTimer.Enabled = true;
@@ -1031,7 +1011,6 @@ namespace Pimung
                     {
                         object sender = new object();
                         EventArgs evt = new EventArgs();
-                        Console.WriteLine("Play");
                         if (totalTime.InvokeRequired)
                             totalTime.Invoke((Action)delegate { playStopMusic(sender, evt); });
                     }
@@ -1039,7 +1018,6 @@ namespace Pimung
                     {
                         object sender = new object();
                         EventArgs evt = new EventArgs();
-                        Console.WriteLine("Forward");
                         if (totalTime.InvokeRequired)
                             totalTime.Invoke((Action)delegate { ForwardButton_Click(sender, evt); });
                     }
@@ -1047,7 +1025,6 @@ namespace Pimung
                     {
                         object sender = new object();
                         EventArgs evt = new EventArgs();
-                        Console.WriteLine("Backward");
                         if (totalTime.InvokeRequired)
                             totalTime.Invoke((Action)delegate { BackwardButton_Click(sender, evt); });
                     }
@@ -1058,7 +1035,6 @@ namespace Pimung
                 readFromArduino.CheckState = System.Windows.Forms.CheckState.Unchecked;
                 portFound = false;
                 portTimer.Enabled = false;
-                Console.WriteLine("Stop reading");
 
             }
         }
@@ -1067,7 +1043,6 @@ namespace Pimung
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Console.WriteLine("Enter");
                 e.Handled = true;
                 e.SuppressKeyPress = true;
                 purposeAnswer.Visible = true;
@@ -1087,7 +1062,7 @@ namespace Pimung
             }
         }
 
-        private void reType_Click(object sender, EventArgs e)
+        private void reType_Click(object sender, EventArgs e)  //the X has been pressed and the user want to retype the answer to the question
         {
             Pimung.Properties.Settings.Default.date = "28.02.1989";
             Pimung.Properties.Settings.Default.Save();
@@ -1126,7 +1101,6 @@ namespace Pimung
             foreach (int indexChecked in todoList.CheckedIndices)
             {
                 indices.Add(indexChecked);
-                Console.WriteLine("index checked: " + indexChecked);
             }
 
             descendingOrdering(indices);
